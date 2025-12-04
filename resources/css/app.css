@@ -8,14 +8,20 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+
+    --default-font-family: 'Public Sans', sans-serif;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
+
+    --color-beige-100: hsl(30, 36%, 96%);
+    --color-beige-500: hsl(23, 6%, 57%);
+
+    --color-grey-100: hsl(0, 0%, 95%);
+    --color-grey-300: hsl(0, 0%, 70%);
+    --color-grey-500: hsl(0, 0%, 41%);
+    --color-grey-900: hsl(252, 7%, 13%);
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -140,4 +146,14 @@
     body {
         @apply bg-background text-foreground;
     }
+
+    @font-face {
+        font-family: 'Public Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("fonts/PublicSans.ttf") format("truetype");
+
+    }
+
 }
