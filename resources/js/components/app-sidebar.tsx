@@ -1,36 +1,67 @@
 import AppLogo from '@/components/app-logo';
+import { NavUser } from '@/components/nav-user';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn, resolveUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
   ArrowFatLinesLeftIcon,
   ArrowFatLinesRightIcon,
+  ArrowsDownUpIcon,
+  ChartDonutIcon,
+  GearIcon,
+  HouseIcon,
+  ReceiptIcon,
+  TipJarIcon,
 } from '@phosphor-icons/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
 import { useState } from 'react';
 
 const mainNavItems: NavItem[] = [
   {
-    title: 'Dashboard',
+    title: 'Overview',
     href: dashboard(),
-    icon: LayoutGrid,
+    icon: HouseIcon,
+  },
+  {
+    title: 'Transactions',
+    href: '#',
+    icon: ArrowsDownUpIcon,
+  },
+  {
+    title: 'Budgets',
+    href: '#',
+    icon: ChartDonutIcon,
+  },
+  {
+    title: 'pots',
+    href: '#',
+    icon: TipJarIcon,
+  },
+  {
+    title: 'Recurring Bills',
+    href: '#',
+    icon: ReceiptIcon,
+  },
+  {
+    title: 'App Settings',
+    href: '#',
+    icon: GearIcon,
   },
 ];
 
-const footerNavItems: NavItem[] = [
-  {
-    title: 'Repository',
-    href: 'https://github.com/laravel/react-starter-kit',
-    icon: Folder,
-  },
-  {
-    title: 'Documentation',
-    href: 'https://laravel.com/docs/starter-kits#react',
-    icon: BookOpen,
-  },
-];
+// const footerNavItems: NavItem[] = [
+//   {
+//     title: 'Repository',
+//     href: 'https://github.com/laravel/react-starter-kit',
+//     icon: Folder,
+//   },
+//   {
+//     title: 'Documentation',
+//     href: 'https://laravel.com/docs/starter-kits#react',
+//     icon: BookOpen,
+//   },
+// ];
 
 interface AppSidebarProps {
   className?: string;
@@ -38,54 +69,104 @@ interface AppSidebarProps {
 
 export function AppSidebar({ className }: AppSidebarProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const page = usePage();
   return (
     <aside
       className={cn(
-        `row-span-full overflow-y-auto rounded-r-2xl bg-grey-900 p-4 text-white transition-all duration-300 ${
+        `row-span-full grid grid-rows-[100px_1fr_200px] overflow-x-hidden overflow-y-auto rounded-r-2xl bg-grey-900 text-white transition-all duration-300 ${
           sidebarOpen ? 'w-[300px]' : 'w-[88px]'
         }`,
         className,
       )}
     >
-      <header className="flex items-center justify-center text-2xl font-bold text-white">
-        <Button variant="ghost" className="w-full hover:bg-grey-100" asChild>
+      <header
+        className={cn(
+          'flex items-center justify-center px-4 text-2xl font-bold text-white',
+          !sidebarOpen && 'max-w-[88px]',
+        )}
+      >
+        <Button
+          variant="ghost"
+          size="lg"
+          className="w-full hover:bg-grey-100/10 hover:text-white"
+          asChild
+        >
           <Link href={dashboard()} prefetch>
             <AppLogo />
           </Link>
         </Button>
       </header>
-      <div onClick={() => setSidebarOpen(!sidebarOpen)}>
-        {sidebarOpen ? (
-          <span className="flex items-center justify-start gap-4 text-grey-300">
-            <ArrowFatLinesLeftIcon weight="fill" size={24} color={'#b3b3b3'} />
-            Minimize Menu
-          </span>
-        ) : (
-          <ArrowFatLinesRightIcon weight="fill" size={24} color={'#b3b3b3'} />
-        )}
+
+      <div className={cn(!sidebarOpen && 'max-w-[88px]')}>
+        <nav>
+          <ul>
+            {mainNavItems.map((navItem: NavItem) => (
+              <li
+                key={navItem.title}
+                className={cn(
+                  !page.url.startsWith(resolveUrl(navItem.href)) &&
+                    'hover:text-white',
+                )}
+              >
+                <Link
+                  href={navItem.href}
+                  prefetch
+                  className={cn(
+                    'flex min-h-[56px] max-w-[276px] items-center justify-start gap-4 px-8 text-[16px] font-bold text-grey-300',
+                    page.url.startsWith(resolveUrl(navItem.href))
+                      ? 'rounded-r-lg border-l-6 border-l-green-custom bg-beige-100 text-grey-900'
+                      : 'hover:text-beige-100',
+                  )}
+                >
+                  <navItem.icon
+                    weight="fill"
+                    size={24}
+                    color={cn(
+                      page.url.startsWith(resolveUrl(navItem.href))
+                        ? '#277C78'
+                        : '#b3b3b3',
+                    )}
+                  />
+                  <span className={cn(!sidebarOpen && 'hidden')}>
+                    {navItem.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
+
+      <footer
+        className={cn(
+          'flex flex-col justify-evenly px-4',
+          !sidebarOpen && 'max-w-[88px]',
+        )}
+      >
+        <div
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className={cn('px-4', !sidebarOpen && 'max-w-[88px]')}
+        >
+          {sidebarOpen ? (
+            <span className="flex cursor-pointer items-center justify-start gap-4 text-grey-300">
+              <ArrowFatLinesLeftIcon
+                weight="fill"
+                size={24}
+                color={'#b3b3b3'}
+              />
+              Minimize Menu
+            </span>
+          ) : (
+            <ArrowFatLinesRightIcon
+              weight="fill"
+              size={24}
+              color={'#b3b3b3'}
+              className=""
+            />
+          )}
+        </div>
+        <NavUser sidebarOpen={sidebarOpen} />
+      </footer>
     </aside>
-    // <Sidebar collapsible="icon" variant="floating" className="">
-    //   <SidebarHeader>
-    //     <SidebarMenu>
-    //       <SidebarMenuItem>
-    //         <SidebarMenuButton size="lg" asChild>
-    //           <Link href={dashboard()} prefetch>
-    //             <AppLogo />
-    //           </Link>
-    //         </SidebarMenuButton>
-    //       </SidebarMenuItem>
-    //     </SidebarMenu>
-    //   </SidebarHeader>
-    //
-    //   <SidebarContent>
-    //     <NavMain items={mainNavItems} />
-    //   </SidebarContent>
-    //
-    //   <SidebarFooter>
-    //     <NavFooter items={footerNavItems} className="mt-auto" />
-    //     <NavUser />
-    //   </SidebarFooter>
-    // </Sidebar>
   );
 }

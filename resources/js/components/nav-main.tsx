@@ -13,7 +13,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
   const page = usePage();
   return (
     <SidebarGroup className="px-2 py-0">
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel className="text-grey-300">Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
@@ -23,7 +23,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
               tooltip={{ children: item.title }}
             >
               <Link href={item.href} prefetch>
-                {item.icon && <item.icon />}
+                {item.icon && <item.icon weight="fill" />}
                 <span>{item.title}</span>
               </Link>
             </SidebarMenuButton>
