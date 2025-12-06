@@ -47,8 +47,6 @@ const NavItems: NavItem[] = [
 export function MobileNav() {
   const page = usePage<SharedData>();
 
-  console.log(page);
-
   return (
     <nav className="flex items-end justify-between bg-grey-900 px-4">
       {NavItems.map((item: NavItem, index: number) => {

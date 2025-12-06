@@ -16,14 +16,9 @@ export function AppShell({ children, variant = 'header' }: AppShellProps) {
 
   if (variant === 'mixed') {
     return (
-      <>
-        <div className="flex min-h-screen w-full flex-col bg-beige-100 lg:hidden">
-          {children}
-        </div>
-        <SidebarProvider defaultOpen={isOpen} className="hidden lg:block">
-          {children}
-        </SidebarProvider>
-      </>
+      <div className="flex min-h-screen w-full flex-col bg-beige-100">
+        {children}
+      </div>
     );
   }
 

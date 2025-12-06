@@ -20,12 +20,12 @@ export function AppHeader({ title }: AppHeaderProps) {
   return (
     <>
       <div className="border-b border-sidebar-border/80">
-        <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
+        <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl lg:m-0 lg:px-0">
           <h1 className="stroke-0 text-[32px] leading-[120%] font-bold text-grey-900">
             {title}
           </h1>
 
-          <div className="ml-auto flex items-center space-x-2">
+          <div className="ml-auto flex items-center space-x-2 lg:hidden">
             <div className="relative flex items-center space-x-1"></div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
