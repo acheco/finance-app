@@ -23,7 +23,7 @@
     --color-grey-500: hsl(0, 0%, 41%);
     --color-grey-900: hsl(252, 7%, 13%);
 
-    --color-green-custom: hsl(177,52%, 32%);
+    --color-green-custom: hsl(177, 52%, 32%);
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -154,8 +154,7 @@
         font-style: normal;
         font-weight: 400;
         font-display: swap;
-        src: url("fonts/PublicSans.ttf") format("truetype");
-
+        src: url("/fonts/PublicSans.ttf") format("truetype");
     }
 
 }
@@ -180,10 +179,11 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
 }

@@ -48,13 +48,13 @@ export function MobileNav() {
   const page = usePage<SharedData>();
 
   return (
-    <nav className="flex items-end justify-between bg-grey-900 px-4">
+    <nav className="fixed right-0 bottom-0 left-0 flex items-end justify-between bg-grey-900 px-4">
       {NavItems.map((item: NavItem, index: number) => {
         return (
           <div
             key={index}
             className={cn(
-              'grid h-[44px] w-[68.6px] grid-cols-1 grid-rows-[1fr_auto] place-items-center items-center overflow-hidden rounded-t-md md:h-[66px] md:w-[104px]',
+              'mt-2 grid h-[44px] w-[68.6px] grid-cols-1 grid-rows-[1fr_auto] place-items-center items-center overflow-hidden rounded-t-md md:h-[66px] md:w-[104px]',
               isSameUrl(page.url, item.href) ? 'bg-beige-100' : 'bg-grey-900',
             )}
           >

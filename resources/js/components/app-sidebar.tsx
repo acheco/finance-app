@@ -15,7 +15,7 @@ import {
   ReceiptIcon,
   TipJarIcon,
 } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const mainNavItems: NavItem[] = [
   {
@@ -50,26 +50,22 @@ const mainNavItems: NavItem[] = [
   },
 ];
 
-// const footerNavItems: NavItem[] = [
-//   {
-//     title: 'Repository',
-//     href: 'https://github.com/laravel/react-starter-kit',
-//     icon: Folder,
-//   },
-//   {
-//     title: 'Documentation',
-//     href: 'https://laravel.com/docs/starter-kits#react',
-//     icon: BookOpen,
-//   },
-// ];
-
 interface AppSidebarProps {
   className?: string;
 }
 
 export function AppSidebar({ className }: AppSidebarProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const page = usePage();
+
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    const saved = localStorage.getItem('sidebarOpen');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sidebarOpen', JSON.stringify(sidebarOpen));
+  }, [sidebarOpen]);
+
   return (
     <aside
       className={cn(
@@ -112,10 +108,11 @@ export function AppSidebar({ className }: AppSidebarProps) {
                   href={navItem.href}
                   prefetch
                   className={cn(
-                    'flex min-h-[56px] max-w-[276px] items-center justify-start gap-4 px-8 text-[16px] font-bold text-grey-300',
+                    'mr-2 flex min-h-[56px] max-w-[276px] items-center justify-start gap-4',
                     page.url.startsWith(resolveUrl(navItem.href))
                       ? 'rounded-r-lg border-l-6 border-l-green-custom bg-beige-100 text-grey-900'
                       : 'hover:text-beige-100',
+                    sidebarOpen && 'px-8',
                   )}
                 >
                   <navItem.icon
@@ -126,6 +123,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
                         ? '#277C78'
                         : '#b3b3b3',
                     )}
+                    className={cn(!sidebarOpen && 'mx-auto')}
                   />
                   <span className={cn(!sidebarOpen && 'hidden')}>
                     {navItem.title}
@@ -148,7 +146,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
           className={cn('px-4', !sidebarOpen && 'max-w-[88px]')}
         >
           {sidebarOpen ? (
-            <span className="flex cursor-pointer items-center justify-start gap-4 text-grey-300">
+            <span className="m-auto flex cursor-pointer items-center justify-start gap-4 text-grey-300">
               <ArrowFatLinesLeftIcon
                 weight="fill"
                 size={24}
@@ -157,12 +155,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
               Minimize Menu
             </span>
           ) : (
-            <ArrowFatLinesRightIcon
-              weight="fill"
-              size={24}
-              color={'#b3b3b3'}
-              className=""
-            />
+            <ArrowFatLinesRightIcon weight="fill" size={24} color={'#b3b3b3'} />
           )}
         </div>
         <NavUser sidebarOpen={sidebarOpen} />
