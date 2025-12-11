@@ -8,53 +8,15 @@ import { Link, usePage } from '@inertiajs/react';
 import {
   ArrowFatLinesLeftIcon,
   ArrowFatLinesRightIcon,
-  ArrowsDownUpIcon,
-  ChartDonutIcon,
-  GearIcon,
-  HouseIcon,
-  ReceiptIcon,
-  TipJarIcon,
 } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 
-const mainNavItems: NavItem[] = [
-  {
-    title: 'Overview',
-    href: dashboard(),
-    icon: HouseIcon,
-  },
-  {
-    title: 'Transactions',
-    href: '#',
-    icon: ArrowsDownUpIcon,
-  },
-  {
-    title: 'Budgets',
-    href: '#',
-    icon: ChartDonutIcon,
-  },
-  {
-    title: 'pots',
-    href: '#',
-    icon: TipJarIcon,
-  },
-  {
-    title: 'Recurring Bills',
-    href: '#',
-    icon: ReceiptIcon,
-  },
-  {
-    title: 'App Settings',
-    href: '#',
-    icon: GearIcon,
-  },
-];
-
 interface AppSidebarProps {
   className?: string;
+  NavItems: NavItem[];
 }
 
-export function AppSidebar({ className }: AppSidebarProps) {
+export function AppSidebar({ className, NavItems }: AppSidebarProps) {
   const page = usePage();
 
   const [sidebarOpen, setSidebarOpen] = useState(() => {
@@ -96,7 +58,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
       <div className={cn(!sidebarOpen && 'max-w-[88px]')}>
         <nav>
           <ul>
-            {mainNavItems.map((navItem: NavItem) => (
+            {NavItems.map((navItem: NavItem) => (
               <li
                 key={navItem.title}
                 className={cn(

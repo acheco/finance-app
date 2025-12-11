@@ -1,50 +1,8 @@
 import { cn, isSameUrl } from '@/lib/utils';
-import { dashboard } from '@/routes';
 import type { NavItem, SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import {
-  ArrowsDownUpIcon,
-  ChartDonutIcon,
-  GearIcon,
-  HouseIcon,
-  ReceiptIcon,
-  TipJarIcon,
-} from '@phosphor-icons/react';
 
-const NavItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    href: dashboard(),
-    icon: HouseIcon,
-  },
-  {
-    title: 'Transactions',
-    href: '#',
-    icon: ArrowsDownUpIcon,
-  },
-  {
-    title: 'Budgets',
-    href: '#',
-    icon: ChartDonutIcon,
-  },
-  {
-    title: 'Pots',
-    href: '#',
-    icon: TipJarIcon,
-  },
-  {
-    title: 'Recurring Bills',
-    href: '#',
-    icon: ReceiptIcon,
-  },
-  {
-    title: 'App Settings',
-    href: '#',
-    icon: GearIcon,
-  },
-];
-
-export function MobileNav() {
+export function MobileNav({ NavItems }: { NavItems: NavItem[] }) {
   const page = usePage<SharedData>();
 
   return (
