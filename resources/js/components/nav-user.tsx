@@ -1,55 +1,44 @@
+import { Button } from '@/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar,
-} from '@/components/ui/sidebar';
 import { UserInfo } from '@/components/user-info';
 import { UserMenuContent } from '@/components/user-menu-content';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { ChevronsUpDown } from 'lucide-react';
+import { CaretUpDownIcon } from '@phosphor-icons/react';
 
-export function NavUser() {
-    const { auth } = usePage<SharedData>().props;
-    const { state } = useSidebar();
-    const isMobile = useIsMobile();
+export function NavUser({ sidebarOpen }: { sidebarOpen?: boolean }) {
+  const { auth } = usePage<SharedData>().props;
 
-    return (
-        <SidebarMenu>
-            <SidebarMenuItem>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton
-                            size="lg"
-                            className="group text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent"
-                            data-test="sidebar-menu-button"
-                        >
-                            <UserInfo user={auth.user} />
-                            <ChevronsUpDown className="ml-auto size-4" />
-                        </SidebarMenuButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-                        align="end"
-                        side={
-                            isMobile
-                                ? 'bottom'
-                                : state === 'collapsed'
-                                  ? 'left'
-                                  : 'bottom'
-                        }
-                    >
-                        <UserMenuContent user={auth.user} />
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </SidebarMenuItem>
-        </SidebarMenu>
-    );
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild className="bg-grey-900 hover:bg-grey-900">
+        <Button
+          size={sidebarOpen ? 'lg' : 'icon'}
+          className={cn(
+            'text-sidebar-accent-foreground',
+            !sidebarOpen && 'px-8',
+          )}
+          data-test="sidebar-menu-button"
+        >
+          <UserInfo user={auth.user} />
+          <CaretUpDownIcon
+            weight="fill"
+            color="#b3b3b3"
+            className={cn('ml-auto size-4', !sidebarOpen && 'hidden')}
+          />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+        align="end"
+      >
+        <UserMenuContent user={auth.user} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
