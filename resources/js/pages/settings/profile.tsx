@@ -47,7 +47,7 @@ export default function Profile({
 
                   <Input
                     id="name"
-                    className="mt-1 block w-full"
+                    className="mt-1 block w-full bg-white"
                     defaultValue={auth.user.name}
                     name="name"
                     required
@@ -64,7 +64,7 @@ export default function Profile({
                   <Input
                     id="email"
                     type="email"
-                    className="mt-1 block w-full"
+                    className="mt-1 block w-full bg-white"
                     defaultValue={auth.user.email}
                     name="email"
                     required

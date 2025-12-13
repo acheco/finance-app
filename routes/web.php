@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\AppSettings\AccountController;
+use App\Http\Controllers\AppSettings\CurrencyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
