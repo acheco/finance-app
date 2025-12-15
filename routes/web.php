@@ -17,8 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     return Inertia::render('dashboard');
   })->name('dashboard');
 
-  Route::resource('app-settings/currencies', CurrencyController::class);
-  Route::resource('app-settings/accounts', AccountController::class);
+  Route::resource('app-settings/currencies', CurrencyController::class)->only(['index', 'update', 'store', 'destroy']);
+  Route::resource('app-settings/accounts', AccountController::class)->only(['index', 'update', 'store', 'destroy']);
 });
 
 require __DIR__ . '/settings.php';

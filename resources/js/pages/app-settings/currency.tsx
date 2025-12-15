@@ -1,6 +1,7 @@
+import CurrencyForm from '@/components/currency-form';
+import DeleteCurrency from '@/components/delete-currency';
 import HeadingSmall from '@/components/heading-small';
 import TablePagination from '@/components/table-pagination';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -38,23 +39,37 @@ export default function currency({ currencies }: CurrencyPageProps) {
               placeholder="Filter"
               className="max-w-3xs border-gray-200 bg-white"
             />
-            <Button>New Currency</Button>
+            <CurrencyForm mode="create" />
           </div>
           <div className="rounded-md bg-white p-8 shadow-sm">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
+                  <TableHead className="hidden md:block">Name</TableHead>
+                  <TableHead>Code</TableHead>
                   <TableHead>Symbol</TableHead>
-                  <TableHead></TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {currencies.data.map((currency) => (
                   <TableRow key={currency.id}>
-                    <TableCell>{currency.name}</TableCell>
+                    <TableCell className="hidden md:block">
+                      {currency.name}
+                    </TableCell>
+                    <TableCell>{currency.code}</TableCell>
                     <TableCell>{currency.symbol}</TableCell>
-                    <TableCell>actions goes here</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      {currency.can.delete && (
+                        <DeleteCurrency currency={currency} />
+                      )}
+                      {currency.can.update && (
+                        <CurrencyForm mode="edit" defaultValue={currency} />
+                      )}
+                      {!currency.can.update && !currency.can.delete && (
+                        <span>no action</span>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

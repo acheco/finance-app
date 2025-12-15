@@ -51,6 +51,10 @@ export interface Currency {
   is_active: boolean;
   created_at?: string;
   updated_at?: string;
+  can: {
+    update: boolean;
+    delete: boolean;
+  };
 }
 
 export interface PaginationLink {

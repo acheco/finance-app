@@ -99,7 +99,7 @@ export default function AppSettingsLayout({
         </NavigationMenuList>
       </NavigationMenu>
 
-      <section className="space-y-8">{children}</section>
+      <section className="space-y-8 xl:max-w-6xl">{children}</section>
     </div>
   );
 }
