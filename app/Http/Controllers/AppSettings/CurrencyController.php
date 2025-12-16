@@ -7,11 +7,14 @@ use App\Http\Requests\CurrencyStoreRequest;
 use App\Http\Requests\CurrencyUpdateRequest;
 use App\Models\Currency;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CurrencyController extends Controller
 {
@@ -19,29 +22,43 @@ class CurrencyController extends Controller
    * Display a listing of the resource.
    */
 
-  public function index()
+  public function index(Request $request): Response
   {
 
-    $currencies = Currency::orderBy('code', 'asc')->paginate(10)->through(fn($currency) => [
-      'id' => $currency->id,
-      'name' => $currency->name,
-      'code' => $currency->code,
-      'symbol' => $currency->symbol,
-      'is_active' => $currency->is_active,
-      'user_id' => $currency->user_id,
-      'can' => [
-        'delete' => request()->user()->can('delete', $currency),
-        'update' => request()->user()->can('update', $currency),
-      ]
-    ]);
+    $filters = [
+      'search' => trim($request->input('search', ''))
+    ];
 
-    return Inertia::render('app-settings/currency', ['currencies' => $currencies]);
+    $currencies = Currency::query()
+      ->when(!empty($filters['search']), function ($query) use ($filters) {
+        $query->where('name', 'ILIKE', '%' . $filters['search'] . '%')
+          ->orWhere('code', 'ILIKE', '%' . $filters['search'] . '%');
+      })->orderBy('code', 'asc')
+      ->paginate(10)
+      ->withQueryString()
+      ->through(fn($currency) => [
+        'id' => $currency->id,
+        'name' => $currency->name,
+        'code' => $currency->code,
+        'symbol' => $currency->symbol,
+        'is_active' => $currency->is_active,
+        'user_id' => $currency->user_id,
+        'can' => [
+          'delete' => request()->user()->can('delete', $currency),
+          'update' => request()->user()->can('update', $currency),
+        ]
+      ]);
+
+    return Inertia::render('app-settings/currency', [
+      'currencies' => $currencies,
+      'filters' => $filters,
+    ]);
   }
 
   /**
    * Store a newly created resource in storage.
    */
-  public function store(CurrencyStoreRequest $request)
+  public function store(CurrencyStoreRequest $request): RedirectResponse|Redirector
   {
     Gate::authorize('create', Currency::class);
     $validated = $request->validated();

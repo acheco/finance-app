@@ -1,5 +1,4 @@
 import CurrencyController from '@/actions/App/Http/Controllers/AppSettings/CurrencyController';
-import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -10,12 +9,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Field, FieldError, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Currency } from '@/types';
 import { Form } from '@inertiajs/react';
 import { PencilSimpleLineIcon } from '@phosphor-icons/react';
+import { useState } from 'react';
 
 type CurrencyFormProps =
   | {
@@ -31,10 +31,11 @@ export default function CurrencyForm({
   mode,
   defaultValue,
 }: CurrencyFormProps) {
+  const [open, setOpen] = useState(false);
   const submitLabel = mode === 'edit' ? 'Save Changes' : 'Add Currency';
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {mode === 'edit' ? (
           <Button variant="ghost" size="icon-sm">
@@ -60,63 +61,48 @@ export default function CurrencyForm({
           {...(mode === 'edit'
             ? { ...CurrencyController.update.form(defaultValue.id) }
             : { ...CurrencyController.store.form() })}
+          onSuccess={() => setOpen(false)}
           className="space-y-6"
         >
           {({ processing, errors, resetAndClearErrors }) => (
-            <>
-              <div className="grid gap-2">
-                <Label
-                  htmlFor="name"
-                  className="text-xs font-bold text-grey-500"
-                >
-                  Name
-                </Label>
+            <FieldSet>
+              <Field data-invalid={errors.name}>
+                <FieldLabel htmlFor="name">Name</FieldLabel>
                 <Input
                   id="name"
                   name="name"
-                  type="text"
                   defaultValue={defaultValue?.name}
                   placeholder="US Dollar"
-                  className="min-h-[45px]"
+                  className="min-h-11"
                 />
-                <InputError message={errors.name} />
-              </div>
+                <FieldError>{errors.name}</FieldError>
+              </Field>
 
-              <div className="grid gap-2">
-                <Label
-                  htmlFor="code"
-                  className="text-xs font-bold text-grey-500"
-                >
-                  Code
-                </Label>
+              <Field>
+                <FieldLabel htmlFor="code">Code</FieldLabel>
                 <Input
                   id="code"
                   name="code"
                   type="text"
                   defaultValue={defaultValue?.code}
                   placeholder="USD"
-                  className="min-h-[45px]"
+                  className="min-h-11"
                 />
-                <InputError message={errors.code} />
-              </div>
+                <FieldError>{errors.code}</FieldError>
+              </Field>
 
-              <div className="grid gap-2">
-                <Label
-                  htmlFor="symbol"
-                  className="text-xs font-bold text-grey-500"
-                >
-                  Symbol
-                </Label>
+              <Field>
+                <FieldLabel htmlFor="symbol">Symbol</FieldLabel>
                 <Input
                   id="symbol"
                   name="symbol"
                   type="text"
                   defaultValue={defaultValue?.symbol}
                   placeholder="$"
-                  className="min-h-[45px]"
+                  className="min-h-11"
                 />
-                <InputError message={errors.symbol} />
-              </div>
+                <FieldError>{errors.symbol}</FieldError>
+              </Field>
 
               <DialogFooter className="flex flex-col flex-wrap">
                 {
@@ -141,7 +127,7 @@ export default function CurrencyForm({
                   </Button>
                 </DialogClose>
               </DialogFooter>
-            </>
+            </FieldSet>
           )}
         </Form>
       </DialogContent>
