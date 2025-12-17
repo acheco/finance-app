@@ -57,6 +57,23 @@ export interface Currency {
   };
 }
 
+export interface Category {
+  id: number;
+  user_id?: number;
+  transaction_type_id: number;
+  transaction_type?: string;
+  name: string;
+  color: string;
+  icon?: string;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+  can: {
+    update: boolean;
+    delete: boolean;
+  };
+}
+
 export interface PaginationLink {
   url: string | null;
   label: string;
@@ -81,3 +98,4 @@ export interface PaginatedData<T> {
 }
 
 export type PaginatedCurrencies = PaginatedData<Currency>;
+export type PaginatedCategories = PaginatedData<Category>;

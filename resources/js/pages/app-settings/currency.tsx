@@ -1,13 +1,8 @@
 import CurrencyForm from '@/components/currency-form';
 import DeleteCurrency from '@/components/delete-currency';
 import HeadingSmall from '@/components/heading-small';
+import SearchFilter from '@/components/search-filter';
 import TablePagination from '@/components/table-pagination';
-import { Field, FieldLabel } from '@/components/ui/field';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@/components/ui/input-group';
 import {
   Table,
   TableBody,
@@ -20,10 +15,7 @@ import AppLayout from '@/layouts/app-layout';
 import AppSettingsLayout from '@/layouts/settings/app-settings-layout';
 import { index as currency } from '@/routes/currencies';
 import { PaginatedCurrencies } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { MagnifyingGlassIcon } from '@phosphor-icons/react';
-import { useEffect, useState } from 'react';
-import { useDebounce } from 'use-debounce';
+import { Head } from '@inertiajs/react';
 
 interface CurrencyPageProps {
   currencies: PaginatedCurrencies;
@@ -33,25 +25,6 @@ interface CurrencyPageProps {
 }
 
 export default function Currency({ currencies, filters }: CurrencyPageProps) {
-  const [searchTerm, setSearchTerm] = useState(filters.search || '');
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
-
-  useEffect(() => {
-    if (debouncedSearchTerm.trim() === filters.search) return;
-
-    if (debouncedSearchTerm !== filters.search) {
-      router.get(
-        currency().url,
-        { search: debouncedSearchTerm, page: 1 },
-        {
-          preserveScroll: true,
-          replace: true,
-          only: ['currencies', 'filters'],
-        },
-      );
-    }
-  }, [debouncedSearchTerm, filters.search]);
-
   return (
     <AppLayout title="App Settings">
       <Head title="Currency settings" />
@@ -64,20 +37,12 @@ export default function Currency({ currencies, filters }: CurrencyPageProps) {
 
         <div className="space-y-4">
           <div className="flex w-full items-center justify-between gap-4">
-            <Field>
-              <FieldLabel htmlFor="search" className="sr-only" />
-              <InputGroup className="max-w-lg bg-white">
-                <InputGroupInput
-                  name="search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search currency"
-                />
-                <InputGroupAddon align="inline-end">
-                  <MagnifyingGlassIcon />
-                </InputGroupAddon>
-              </InputGroup>
-            </Field>
+            <SearchFilter
+              initialValue={filters.search}
+              url={currency().url}
+              placeholder="Search Currency"
+              onlyProps={['currencies', 'filters']}
+            />
 
             <CurrencyForm mode="create" />
           </div>

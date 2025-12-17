@@ -74,7 +74,7 @@ function PaginationPrevious({
       {...props}
     >
       <CaretLeftIcon weight={'fill'} color={'#98908B'} />
-      <span className="hidden sm:block">Previous</span>
+      <span className="hidden sm:block">Prev</span>
     </PaginationLink>
   )
 }

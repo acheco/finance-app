@@ -9,6 +9,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
 import { index as accounts } from '@/routes/accounts';
+import { index as categories } from '@/routes/categories';
 import { index as currencies } from '@/routes/currencies';
 import { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -38,7 +39,7 @@ const sidebarNavItems: NavItem[] = [
   },
   {
     title: 'Categories',
-    href: '#',
+    href: categories(),
     icon: TagIcon,
   },
 ];
