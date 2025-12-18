@@ -1,7 +1,9 @@
+import CategoryForm from '@/components/category-form';
+import DeleteCategory from '@/components/delete-category';
 import HeadingSmall from '@/components/heading-small';
+import Icon from '@/components/icon';
 import SearchFilter from '@/components/search-filter';
 import TablePagination from '@/components/table-pagination';
-import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -40,7 +42,7 @@ export default function Category({ categories, filters }: CategoryPageProps) {
               onlyProps={['categories', 'filters']}
             />
 
-            <Button>+ New Category</Button>
+            <CategoryForm mode="create" />
           </div>
 
           <div className="rounded-md bg-white p-8 shadow-sm">
@@ -55,8 +57,32 @@ export default function Category({ categories, filters }: CategoryPageProps) {
               <TableBody>
                 {categories.data.map((category) => (
                   <TableRow key={category.id}>
-                    <TableCell>{category.name}</TableCell>
+                    <TableCell className="flex items-center gap-2 rounded-full">
+                      <div
+                        style={{ backgroundColor: category.color }}
+                        className="rounded-full p-1"
+                      >
+                        <Icon
+                          name={category.icon}
+                          weight="fill"
+                          color="white"
+                          size={16}
+                        />
+                      </div>
+                      {category.name}
+                    </TableCell>
                     <TableCell>{category.transaction_type}</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      {category.can.delete && (
+                        <DeleteCategory category={category} />
+                      )}
+                      {category.can.update && (
+                        <CategoryForm mode="edit" defaultValue={category} />
+                      )}
+                      {!category.can.update && !category.can.delete && (
+                        <span>-</span>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

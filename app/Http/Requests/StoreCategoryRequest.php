@@ -29,4 +29,12 @@ class StoreCategoryRequest extends FormRequest
       'is_active' => 'required|boolean'
     ];
   }
+
+  public function attributes(): array
+  {
+    return [
+      'name' => 'category name',
+      'transaction_type_id' => 'category type',
+    ];
+  }
 }

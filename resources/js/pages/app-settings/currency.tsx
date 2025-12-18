@@ -72,7 +72,7 @@ export default function Currency({ currencies, filters }: CurrencyPageProps) {
                         <CurrencyForm mode="edit" defaultValue={currency} />
                       )}
                       {!currency.can.update && !currency.can.delete && (
-                        <span>no action</span>
+                        <span>-</span>
                       )}
                     </TableCell>
                   </TableRow>

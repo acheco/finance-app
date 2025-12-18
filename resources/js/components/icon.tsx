@@ -1,15 +1,23 @@
-import { cn } from '@/lib/utils';
-import { type LucideProps } from 'lucide-react';
-import { type ComponentType } from 'react';
+import * as Icons from '@phosphor-icons/react';
+import React from 'react';
 
-interface IconProps extends Omit<LucideProps, 'ref'> {
-    iconNode: ComponentType<LucideProps>;
+type PhosphorIcon = React.ComponentType<Icons.IconProps>;
+
+interface DynamicIconProps extends Icons.IconProps {
+  name: string;
+  fallback?: React.ReactNode;
 }
 
-export function Icon({
-    iconNode: IconComponent,
-    className,
-    ...props
-}: IconProps) {
-    return <IconComponent className={cn('h-4 w-4', className)} {...props} />;
-}
+const Icon = ({ name, ...props }: DynamicIconProps) => {
+  const IconComponent = (Icons as unknown as Record<string, PhosphorIcon>)[
+    name
+  ];
+
+  if (!IconComponent) {
+    return null;
+  }
+
+  return <IconComponent {...props} />;
+};
+
+export default Icon;

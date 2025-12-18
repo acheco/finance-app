@@ -57,6 +57,7 @@ export default function SearchFilter({
       </FieldLabel>
       <InputGroup className="max-w-lg bg-white">
         <InputGroupInput
+          id="search"
           name="search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

@@ -64,7 +64,7 @@ export interface Category {
   transaction_type?: string;
   name: string;
   color: string;
-  icon?: string;
+  icon: string;
   is_active: boolean;
   created_at?: string;
   updated_at?: string;

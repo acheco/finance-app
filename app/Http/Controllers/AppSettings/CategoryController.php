@@ -21,10 +21,17 @@ class CategoryController extends Controller
       'search' => trim($request->input('search', ''))
     ];
 
+    $orderDirection = $request->input('orderDirection', 'asc');
+
     $categories = Category::query()
       ->when(!empty($filters['search']), function ($query) use ($filters) {
         $query->where('name', 'ILIKE', '%' . $filters['search'] . '%');
-      })->orderBy('name', 'asc')->with('transactionType')->paginate(10)->withQueryString()->through(fn($category) => [
+      })
+      ->orderBy('name', $orderDirection)
+      ->with('transactionType')
+      ->paginate(10)
+      ->withQueryString()
+      ->through(fn($category) => [
         'id' => $category->id,
         'user_id' => $category->user_id,
         'transaction_type_id' => $category->transaction_type_id,
