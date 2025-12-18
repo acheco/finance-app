@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 class CurrencyController extends Controller
 {
@@ -61,6 +62,7 @@ class CurrencyController extends Controller
   public function store(CurrencyStoreRequest $request): RedirectResponse|Redirector
   {
     Gate::authorize('create', Currency::class);
+
     $validated = $request->validated();
 
     try {
@@ -75,9 +77,9 @@ class CurrencyController extends Controller
 
       });
 
-      return redirect('app-settings/currencies')->with('success', 'Currency has been created.');
+      return redirect()->back()->with('success', 'Currency has been created.');
 
-    } catch (Exception $exception) {
+    } catch (Throwable $exception) {
 
       Log::error("Error storing currency: " . $exception->getMessage());
 
@@ -103,7 +105,7 @@ class CurrencyController extends Controller
 
       return to_route('currencies.index')->with('success', 'Currency has been updated.');
 
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
       Log::error("Error updating currency: " . $e->getMessage());
 
       return back()
@@ -127,7 +129,7 @@ class CurrencyController extends Controller
       return to_route('currencies.index')
         ->with('success', 'Currency has been deleted.');
 
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
       Log::error("Error deleting currency: " . $e->getMessage());
 
       return back()

@@ -15,7 +15,7 @@ import AppLayout from '@/layouts/app-layout';
 import AppSettingsLayout from '@/layouts/settings/app-settings-layout';
 import { index as currency } from '@/routes/currencies';
 import { PaginatedCurrencies } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 
 interface CurrencyPageProps {
   currencies: PaginatedCurrencies;
@@ -25,6 +25,9 @@ interface CurrencyPageProps {
 }
 
 export default function Currency({ currencies, filters }: CurrencyPageProps) {
+  const { errors } = usePage().props;
+
+  console.log(errors);
   return (
     <AppLayout title="App Settings">
       <Head title="Currency settings" />
@@ -50,20 +53,31 @@ export default function Currency({ currencies, filters }: CurrencyPageProps) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="hidden md:block">Name</TableHead>
-                  <TableHead>Code</TableHead>
-                  <TableHead>Symbol</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead className="hidden md:table-cell">Code</TableHead>
+                  <TableHead className="hidden md:table-cell">Symbol</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {currencies.data.map((currency) => (
                   <TableRow key={currency.id}>
-                    <TableCell className="hidden md:block">
-                      {currency.name}
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-custom md:hidden">
+                          <span className="text-xs text-white">
+                            {currency.symbol}
+                          </span>
+                        </div>
+                        {currency.name}
+                      </div>
                     </TableCell>
-                    <TableCell>{currency.code}</TableCell>
-                    <TableCell>{currency.symbol}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {currency.code}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {currency.symbol}
+                    </TableCell>
                     <TableCell className="flex items-center gap-2">
                       {currency.can.delete && (
                         <DeleteCurrency currency={currency} />

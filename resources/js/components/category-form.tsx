@@ -139,7 +139,6 @@ export default function CategoryForm({
                 />
                 <FieldError>{errors.name}</FieldError>
               </Field>
-
               <Field>
                 <FieldLabel htmlFor="type">Type</FieldLabel>
                 <Select
@@ -159,7 +158,6 @@ export default function CategoryForm({
                 </Select>
                 <FieldError>{errors.transaction_type_id}</FieldError>
               </Field>
-
               <Field>
                 <FieldLabel htmlFor="color">Color</FieldLabel>
                 <Select name="color" defaultValue={defaultValue?.color}>
@@ -182,7 +180,6 @@ export default function CategoryForm({
                 </Select>
                 <FieldError>{errors.color}</FieldError>
               </Field>
-
               <Field data-invalid={errors.icon}>
                 <FieldLabel>Icon</FieldLabel>
                 <IconPicker
@@ -193,7 +190,6 @@ export default function CategoryForm({
                 />
                 <FieldError>{errors.icon}</FieldError>
               </Field>
-
               <DialogFooter className="flex flex-col flex-wrap">
                 {
                   <Button

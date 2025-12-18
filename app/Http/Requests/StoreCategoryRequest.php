@@ -26,7 +26,6 @@ class StoreCategoryRequest extends FormRequest
       'transaction_type_id' => 'required|exists:transaction_types,id',
       'color' => 'required|string|max:7',
       'icon' => 'required|string|max:50',
-      'is_active' => 'required|boolean'
     ];
   }
 

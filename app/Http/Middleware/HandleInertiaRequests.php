@@ -47,6 +47,12 @@ class HandleInertiaRequests extends Middleware
           ? $request->user()->only(['id', 'name', 'email'])
           : null,
       ],
+      'flash' => [
+        'success' => $request->session()->get('success'),
+        'error' => $request->session()->get('error'),
+        'warning' => $request->session()->get('warning'),
+        'info' => $request->session()->get('info'),
+      ],
       'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
     ];
   }
