@@ -97,5 +97,21 @@ export interface PaginatedData<T> {
   total: number;
 }
 
+export interface Supplier {
+  id: number;
+  user_id: number | null;
+  category_id?: number;
+  category?: string;
+  name: string;
+  email?: string;
+  logo?: string;
+  phone?: string;
+  address?: string;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;
+export type PaginatedSuppliers = PaginatedData<Supplier>;

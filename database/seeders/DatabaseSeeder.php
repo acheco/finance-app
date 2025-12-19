@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
       CurrencySeeder::class,
       TransactionTypeSeeder::class,
       CategorySeeder::class,
+      SupplierSeeder::class,
     ]);
   }
 }

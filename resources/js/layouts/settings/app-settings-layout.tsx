@@ -11,6 +11,7 @@ import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
 import { index as accounts } from '@/routes/accounts';
 import { index as categories } from '@/routes/categories';
 import { index as currencies } from '@/routes/currencies';
+import { index as suppliers } from '@/routes/suppliers';
 import { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
@@ -29,7 +30,7 @@ const sidebarNavItems: NavItem[] = [
   },
   {
     title: 'Suppliers',
-    href: '#',
+    href: suppliers(),
     icon: StorefrontIcon,
   },
   {
