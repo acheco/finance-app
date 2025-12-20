@@ -1,7 +1,8 @@
+import DeleteSupplier from '@/components/delete-supplier';
 import HeadingSmall from '@/components/heading-small';
 import SearchFilter from '@/components/search-filter';
+import SupplierForm from '@/components/supplier-form';
 import TablePagination from '@/components/table-pagination';
-import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -13,16 +14,21 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import AppSettingsLayout from '@/layouts/settings/app-settings-layout';
 import { index as supplier } from '@/routes/suppliers';
-import { PaginatedSuppliers } from '@/types';
+import { CategoryOption, PaginatedSuppliers } from '@/types';
 
 interface SupplierProps {
   suppliers: PaginatedSuppliers;
+  categories: CategoryOption[];
   filters: {
     search: string;
   };
 }
 
-export default function Supplier({ suppliers, filters }: SupplierProps) {
+export default function Supplier({
+  suppliers,
+  categories,
+  filters,
+}: SupplierProps) {
   return (
     <AppLayout title="App Settings">
       <AppSettingsLayout>
@@ -40,7 +46,7 @@ export default function Supplier({ suppliers, filters }: SupplierProps) {
               onlyProps={['suppliers', 'filters']}
             />
 
-            <Button>+ Add Supplier</Button>
+            <SupplierForm mode="create" categories={categories} />
           </div>
 
           <div className="rounded-md bg-white p-8 shadow-sm">
@@ -67,6 +73,7 @@ export default function Supplier({ suppliers, filters }: SupplierProps) {
                           alt={supplier.name}
                           width="20"
                           height="20"
+                          className="hidden sm:block"
                         />
                         <p>{supplier.name}</p>
                       </div>
@@ -82,15 +89,19 @@ export default function Supplier({ suppliers, filters }: SupplierProps) {
                       {supplier.address || '-'}
                     </TableCell>
                     <TableCell className="flex items-center gap-2">
-                      {/*{category.can.delete && (*/}
-                      {/*  <DeleteCategory category={category} />*/}
-                      {/*)}*/}
-                      {/*{category.can.update && (*/}
-                      {/*  <CategoryForm mode="edit" defaultValue={category} />*/}
-                      {/*)}*/}
-                      {/*{!category.can.update && !category.can.delete && (*/}
-                      {/*  <span>-</span>*/}
-                      {/*)}*/}
+                      {supplier.can.delete && (
+                        <DeleteSupplier supplier={supplier} />
+                      )}
+                      {supplier.can.update && (
+                        <SupplierForm
+                          mode="edit"
+                          defaultValue={supplier}
+                          categories={categories}
+                        />
+                      )}
+                      {!supplier.can.update && !supplier.can.delete && (
+                        <span>-</span>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

@@ -5,9 +5,15 @@ namespace App\Http\Controllers\AppSettings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
+use App\Models\Category;
 use App\Models\Supplier;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class SupplierController extends Controller
 {
@@ -50,19 +56,17 @@ class SupplierController extends Controller
         ]
       ]);
 
+    $categories = Category::select('id', 'name', 'icon')->where(function (Builder $query) {
+      $query->where('user_id', request()->user()->id)
+        ->where('is_active', true)
+        ->orWhereNull('user_id');
+    })->withCount('suppliers')->get();
+
     return Inertia::render('app-settings/supplier', [
       'suppliers' => $suppliers,
+      'categories' => $categories,
       'filters' => $filters,
     ]);
-
-  }
-
-  /**
-   * Show the form for creating a new resource.
-   */
-  public function create()
-  {
-    //
   }
 
   /**
@@ -70,23 +74,23 @@ class SupplierController extends Controller
    */
   public function store(StoreSupplierRequest $request)
   {
-    //
-  }
+    Gate::authorize('create', Supplier::class);
+    $validated = $request->validated();
+    $validated['user_id'] = $request->user()->id;
+    $validated['is_active'] = true;
+    $validated['created_at'] = now();
 
-  /**
-   * Display the specified resource.
-   */
-  public function show(Supplier $supplier)
-  {
-    //
-  }
+    try {
+      DB::transaction(function () use ($validated) {
+        Supplier::create($validated);
+      });
 
-  /**
-   * Show the form for editing the specified resource.
-   */
-  public function edit(Supplier $supplier)
-  {
-    //
+      return redirect()->back()->with('success', 'Supplier has been created.');
+
+    } catch (Throwable $e) {
+      Log::error('Error storing supplier: ' . $e->getMessage());
+      return back()->withInput()->with('error', ' "Error creating supplier."');
+    }
   }
 
   /**
@@ -94,7 +98,26 @@ class SupplierController extends Controller
    */
   public function update(UpdateSupplierRequest $request, Supplier $supplier)
   {
-    //
+    Gate::authorize('update', $supplier);
+
+    $validated = $request->validated();
+    $validated['is_active'] = true;
+    $validated['user_id'] = $request->user()->id;
+    $validated['created_at'] = now();
+
+    try {
+      DB::transaction(function () use ($validated, $supplier) {
+        $supplier->update($validated);
+      });
+
+      return redirect()->back()->with('success', 'Supplier has been updated.');
+
+    } catch (Throwable $e) {
+
+      Log::error('Error updating supplier: ' . $e->getMessage());
+      return back()->withInput()->with('error', ' "Error updating supplier."');
+
+    }
   }
 
   /**
@@ -102,6 +125,8 @@ class SupplierController extends Controller
    */
   public function destroy(Supplier $supplier)
   {
-    //
+    Gate::authorize('delete', $supplier);
+    $supplier->delete();
+    return redirect()->back()->with('success', 'Supplier has been deleted.');
   }
 }

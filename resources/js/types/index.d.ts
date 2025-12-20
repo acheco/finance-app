@@ -81,6 +81,13 @@ export interface PaginationLink {
   active: boolean;
 }
 
+export interface CategoryOption {
+  id: string;
+  name: string;
+  icon: string | null;
+  suppliers_count: number;
+}
+
 export interface PaginatedData<T> {
   current_page: number;
   data: T[];
@@ -100,7 +107,7 @@ export interface PaginatedData<T> {
 export interface Supplier {
   id: number;
   user_id: number | null;
-  category_id?: number;
+  category_id: number;
   category?: string;
   name: string;
   email?: string;
@@ -110,6 +117,10 @@ export interface Supplier {
   is_active: boolean;
   created_at?: string;
   updated_at?: string;
+  can: {
+    update: boolean;
+    delete: boolean;
+  };
 }
 
 export type PaginatedCurrencies = PaginatedData<Currency>;

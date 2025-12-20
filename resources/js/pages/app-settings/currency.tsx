@@ -15,7 +15,7 @@ import AppLayout from '@/layouts/app-layout';
 import AppSettingsLayout from '@/layouts/settings/app-settings-layout';
 import { index as currency } from '@/routes/currencies';
 import { PaginatedCurrencies } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 
 interface CurrencyPageProps {
   currencies: PaginatedCurrencies;
@@ -25,9 +25,6 @@ interface CurrencyPageProps {
 }
 
 export default function Currency({ currencies, filters }: CurrencyPageProps) {
-  const { errors } = usePage().props;
-
-  console.log(errors);
   return (
     <AppLayout title="App Settings">
       <Head title="Currency settings" />

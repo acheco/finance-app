@@ -45,7 +45,7 @@ class SupplierPolicy
    */
   public function delete(User $user, Supplier $supplier): bool
   {
-    return false;
+    return $supplier->user_id !== null && $user->id === $supplier->user_id;
   }
 
   /**
