@@ -164,15 +164,12 @@ export default function Account({
                               : 'text-[#C94736]',
                           )}
                         >
-                          <div className="flex flex-col sm:hidden">
+                          <div className="flex flex-col">
                             <span>{currencyFormat(account.balance)}</span>
-                            <span className="text-xs font-medium text-muted-foreground">
+                            <span className="text-xs font-medium text-muted-foreground sm:hidden">
                               {account.currency}
                             </span>
                           </div>
-                          <span className="hidden sm:table-cell">
-                            {currencyFormat(account.balance)}
-                          </span>
                         </TableCell>
 
                         <TableCell className="flex items-center gap-2">
