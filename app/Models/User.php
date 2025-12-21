@@ -51,13 +51,28 @@ class User extends Authenticatable
     ];
   }
 
-  public function currencies()
+
+  /**
+   * Relationships
+   **/
+
+  public function currencies(): hasMany
   {
     return $this->hasMany(Currency::class);
+  }
+
+  public function accounts(): hasMany
+  {
+    return $this->hasMany(Account::class);
   }
 
   public function categories(): hasMany
   {
     return $this->hasMany(Category::class);
+  }
+
+  public function suppliers(): hasMany
+  {
+    return $this->hasMany(Supplier::class);
   }
 }

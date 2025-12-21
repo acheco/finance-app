@@ -63,18 +63,14 @@ class CurrencyController extends Controller
   {
     Gate::authorize('create', Currency::class);
 
-    $validated = $request->validated();
-
     try {
-      DB::transaction(function () use ($validated, $request) {
-        Currency::create([
-          'name' => $validated['name'],
-          'code' => $validated['code'],
-          'symbol' => $validated['symbol'],
-          'is_active' => true,
-          'user_id' => $request->user()->id,
-        ]);
+      $validated = $request->validated();
+      $data = array_merge($validated, [
+        'is_active' => true,
+      ]);
 
+      DB::transaction(function () use ($request, $data) {
+        $request->user()->currencies()->create($data);
       });
 
       return redirect()->back()->with('success', 'Currency has been created.');

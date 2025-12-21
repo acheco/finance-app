@@ -1,6 +1,7 @@
 import CurrencyForm from '@/components/currency-form';
 import DeleteCurrency from '@/components/delete-currency';
 import HeadingSmall from '@/components/heading-small';
+import LockedField from '@/components/locked-field';
 import SearchFilter from '@/components/search-filter';
 import TablePagination from '@/components/table-pagination';
 import {
@@ -83,7 +84,7 @@ export default function Currency({ currencies, filters }: CurrencyPageProps) {
                         <CurrencyForm mode="edit" defaultValue={currency} />
                       )}
                       {!currency.can.update && !currency.can.delete && (
-                        <span>-</span>
+                        <LockedField />
                       )}
                     </TableCell>
                   </TableRow>

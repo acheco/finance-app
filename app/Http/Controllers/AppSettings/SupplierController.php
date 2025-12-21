@@ -75,14 +75,15 @@ class SupplierController extends Controller
   public function store(StoreSupplierRequest $request)
   {
     Gate::authorize('create', Supplier::class);
-    $validated = $request->validated();
-    $validated['user_id'] = $request->user()->id;
-    $validated['is_active'] = true;
-    $validated['created_at'] = now();
 
     try {
-      DB::transaction(function () use ($validated) {
-        Supplier::create($validated);
+      $validated = $request->validated();
+      $data = array_merge($validated, [
+        'is_active' => true,
+      ]);
+
+      DB::transaction(function () use ($request, $data) {
+        $request->user()->suppliers()->create($data);
       });
 
       return redirect()->back()->with('success', 'Supplier has been created.');
@@ -100,23 +101,21 @@ class SupplierController extends Controller
   {
     Gate::authorize('update', $supplier);
 
-    $validated = $request->validated();
-    $validated['is_active'] = true;
-    $validated['user_id'] = $request->user()->id;
-    $validated['created_at'] = now();
-
     try {
-      DB::transaction(function () use ($validated, $supplier) {
-        $supplier->update($validated);
+      $validated = $request->validated();
+      $data = array_merge($validated, [
+        'is_active' => true,
+      ]);
+
+      DB::transaction(function () use ($supplier, $data) {
+        $supplier->update($data);
       });
 
       return redirect()->back()->with('success', 'Supplier has been updated.');
 
     } catch (Throwable $e) {
-
       Log::error('Error updating supplier: ' . $e->getMessage());
       return back()->withInput()->with('error', ' "Error updating supplier."');
-
     }
   }
 

@@ -2,6 +2,7 @@ import CategoryForm from '@/components/category-form';
 import DeleteCategory from '@/components/delete-category';
 import HeadingSmall from '@/components/heading-small';
 import Icon from '@/components/icon';
+import LockedField from '@/components/locked-field';
 import SearchFilter from '@/components/search-filter';
 import TablePagination from '@/components/table-pagination';
 import {
@@ -16,6 +17,7 @@ import AppLayout from '@/layouts/app-layout';
 import AppSettingsLayout from '@/layouts/settings/app-settings-layout';
 import { index as category } from '@/routes/categories';
 import { PaginatedCategories } from '@/types';
+import { Head } from '@inertiajs/react';
 
 interface CategoryPageProps {
   categories: PaginatedCategories;
@@ -27,6 +29,8 @@ interface CategoryPageProps {
 export default function Category({ categories, filters }: CategoryPageProps) {
   return (
     <AppLayout title="App Settings">
+      <Head title="Category settings" />
+
       <AppSettingsLayout>
         <HeadingSmall
           title="Category settings"
@@ -51,7 +55,7 @@ export default function Category({ categories, filters }: CategoryPageProps) {
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Type</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -80,7 +84,7 @@ export default function Category({ categories, filters }: CategoryPageProps) {
                         <CategoryForm mode="edit" defaultValue={category} />
                       )}
                       {!category.can.update && !category.can.delete && (
-                        <span>-</span>
+                        <LockedField />
                       )}
                     </TableCell>
                   </TableRow>

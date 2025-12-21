@@ -88,6 +88,13 @@ export interface CategoryOption {
   suppliers_count: number;
 }
 
+export interface AccountType {
+  value: string;
+  label: string;
+  icon: string;
+  color: string;
+}
+
 export interface PaginatedData<T> {
   current_page: number;
   data: T[];
@@ -123,6 +130,27 @@ export interface Supplier {
   };
 }
 
+export interface Account {
+  id: number;
+  user_id: number;
+  currency_id: number;
+  currency?: string;
+  name: string;
+  account_type: string;
+  balance: number;
+  initial_balance: number;
+  color: string;
+  icon: string;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+  can: {
+    update: boolean;
+    delete: boolean;
+  };
+}
+
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;
 export type PaginatedSuppliers = PaginatedData<Supplier>;
+export type PaginatedAccounts = PaginatedData<Account>;

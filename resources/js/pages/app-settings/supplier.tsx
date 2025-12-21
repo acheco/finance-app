@@ -1,8 +1,10 @@
 import DeleteSupplier from '@/components/delete-supplier';
 import HeadingSmall from '@/components/heading-small';
+import LockedField from '@/components/locked-field';
 import SearchFilter from '@/components/search-filter';
 import SupplierForm from '@/components/supplier-form';
 import TablePagination from '@/components/table-pagination';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +24,7 @@ import AppLayout from '@/layouts/app-layout';
 import AppSettingsLayout from '@/layouts/settings/app-settings-layout';
 import { index as supplier } from '@/routes/suppliers';
 import { CategoryOption, PaginatedSuppliers } from '@/types';
+import { Head } from '@inertiajs/react';
 import { DotsThreeIcon } from '@phosphor-icons/react';
 
 interface SupplierProps {
@@ -39,6 +42,8 @@ export default function Supplier({
 }: SupplierProps) {
   return (
     <AppLayout title="App Settings">
+      <Head title="Supplier settings" />
+
       <AppSettingsLayout>
         <HeadingSmall
           title="Suppliers Settings"
@@ -99,8 +104,10 @@ export default function Supplier({
                     <TableCell className="flex items-center gap-2">
                       {supplier.can.update || supplier.can.delete ? (
                         <DropdownMenu>
-                          <DropdownMenuTrigger>
-                            <DotsThreeIcon weight="regular" size={18} />
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <DotsThreeIcon weight="regular" size={18} />
+                            </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
                             {supplier.can.delete && (
@@ -120,7 +127,9 @@ export default function Supplier({
                             )}
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      ) : null}
+                      ) : (
+                        <LockedField />
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

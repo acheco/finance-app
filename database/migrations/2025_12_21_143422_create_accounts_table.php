@@ -26,7 +26,7 @@ return new class extends Migration {
       $table->timestamps();
 
       $table->index(['user_id', 'is_active']);
-      $table->index('currency_id');
+      $table->index('is_active');
     });
   }
 

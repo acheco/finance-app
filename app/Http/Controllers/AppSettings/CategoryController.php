@@ -68,13 +68,15 @@ class CategoryController extends Controller
 
     Gate::authorize('create', Category::class);
 
-    $validated = $request->validated();
-    $validated['user_id'] = $request->user()->id;
-    $validated['is_active'] = true;
-
     try {
-      DB::transaction(function () use ($validated) {
-        Category::create($validated);
+      $validated = $request->validated();
+
+      $data = array_merge($validated, [
+        'is_active' => true,
+      ]);
+
+      DB::transaction(function () use ($request, $data) {
+        $request->user()->categories()->create($data);
       });
 
       return redirect()->back()->with('success', 'Category has been created.');
