@@ -3,7 +3,51 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { MobileNav } from '@/components/mobile-nav';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { dashboard } from '@/routes';
+import { index as accounts } from '@/routes/accounts';
+import { NavItem } from '@/types';
+import {
+  ArrowsDownUpIcon,
+  ChartDonutIcon,
+  GearIcon,
+  HouseIcon,
+  ReceiptIcon,
+  TipJarIcon,
+} from '@phosphor-icons/react';
 import React from 'react';
+
+const NavItems: NavItem[] = [
+  {
+    title: 'Overview',
+    href: dashboard(),
+    icon: HouseIcon,
+  },
+  {
+    title: 'Transactions',
+    href: '#',
+    icon: ArrowsDownUpIcon,
+  },
+  {
+    title: 'Budgets',
+    href: '#',
+    icon: ChartDonutIcon,
+  },
+  {
+    title: 'pots',
+    href: '#',
+    icon: TipJarIcon,
+  },
+  {
+    title: 'Recurring Bills',
+    href: '#',
+    icon: ReceiptIcon,
+  },
+  {
+    title: 'App Settings',
+    href: accounts(),
+    icon: GearIcon,
+  },
+];
 
 interface AppSidebarProps {
   title: string;
@@ -19,11 +63,14 @@ export default function AppSidebarLayout({ children, title }: AppSidebarProps) {
         <div className="grid h-screen grid-cols-1 grid-rows-[94px_1fr_52px] overflow-y-auto md:grid-rows-[94px_1fr_74px] lg:hidden">
           <AppHeader title={title} />
           {children}
-          <MobileNav />
+          <MobileNav NavItems={NavItems} />
         </div>
       ) : (
         <div className="grid h-screen grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-x-10">
-          <AppSidebar className="row-span-full overflow-y-hidden" />
+          <AppSidebar
+            NavItems={NavItems}
+            className="row-span-full overflow-y-hidden"
+          />
           <main className="overflow-y-auto">
             <AppHeader title={title} />
             {children}
