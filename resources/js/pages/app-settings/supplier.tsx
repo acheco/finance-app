@@ -4,6 +4,13 @@ import SearchFilter from '@/components/search-filter';
 import SupplierForm from '@/components/supplier-form';
 import TablePagination from '@/components/table-pagination';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   Table,
   TableBody,
   TableCell,
@@ -15,6 +22,7 @@ import AppLayout from '@/layouts/app-layout';
 import AppSettingsLayout from '@/layouts/settings/app-settings-layout';
 import { index as supplier } from '@/routes/suppliers';
 import { CategoryOption, PaginatedSuppliers } from '@/types';
+import { DotsThreeIcon } from '@phosphor-icons/react';
 
 interface SupplierProps {
   suppliers: PaginatedSuppliers;
@@ -60,7 +68,7 @@ export default function Supplier({
                   <TableHead className="hidden xl:table-cell">
                     Address
                   </TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -89,19 +97,30 @@ export default function Supplier({
                       {supplier.address || '-'}
                     </TableCell>
                     <TableCell className="flex items-center gap-2">
-                      {supplier.can.delete && (
-                        <DeleteSupplier supplier={supplier} />
-                      )}
-                      {supplier.can.update && (
-                        <SupplierForm
-                          mode="edit"
-                          defaultValue={supplier}
-                          categories={categories}
-                        />
-                      )}
-                      {!supplier.can.update && !supplier.can.delete && (
-                        <span>-</span>
-                      )}
+                      {supplier.can.update || supplier.can.delete ? (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger>
+                            <DotsThreeIcon weight="regular" size={18} />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            {supplier.can.delete && (
+                              <DropdownMenuItem asChild>
+                                <DeleteSupplier supplier={supplier} />
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuSeparator />
+                            {supplier.can.update && (
+                              <DropdownMenuItem asChild>
+                                <SupplierForm
+                                  mode="edit"
+                                  defaultValue={supplier}
+                                  categories={categories}
+                                />
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))}

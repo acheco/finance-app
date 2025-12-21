@@ -85,8 +85,9 @@ export default function SupplierForm(props: SupplierFormProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {isEdit ? (
-          <Button variant="ghost" size="icon-sm">
+          <Button variant="ghost" className="w-full justify-start">
             <PencilSimpleLineIcon weight="fill" color="#826CB0" />
+            Edit
           </Button>
         ) : (
           <Button>+ New Supplier</Button>

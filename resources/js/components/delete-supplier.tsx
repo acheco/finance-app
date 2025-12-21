@@ -21,8 +21,12 @@ export default function DeleteSupplier({ supplier }: DeleteSupplierProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon-sm">
+        <Button
+          variant="ghost"
+          className="w-full justify-start hover:bg-red-100 dark:hover:bg-red-600"
+        >
           <TrashIcon weight="fill" color="#C94736" />
+          Delete
         </Button>
       </DialogTrigger>
       <DialogContent>

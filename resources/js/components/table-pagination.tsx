@@ -26,8 +26,6 @@ export default function TablePagination({
   const nextLink = links[links.length - 1];
   const pageLinks = links.slice(1, -1);
 
-  const activePage = pageLinks.find((link) => link.active);
-
   const getVisiblePages = () => {
     const total = pageLinks.length;
     const currentIdx = pageLinks.findIndex((link) => link.active);
@@ -56,12 +54,7 @@ export default function TablePagination({
           />
         </PaginationItem>
 
-        {/* Mobile: "page X of Y" */}
-        <div className="flex text-sm font-medium text-grey-900 sm:hidden">
-          {activePage?.label} / {pageLinks.length}
-        </div>
-
-        <div className="hidden flex-row items-center gap-1 sm:flex">
+        <div className="flex flex-row items-center gap-1">
           {visiblePages.map((link, index) => {
             const prevVisible = visiblePages[index - 1];
             const showEllipsis =
