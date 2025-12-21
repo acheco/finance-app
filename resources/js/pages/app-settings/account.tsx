@@ -52,7 +52,6 @@ export default function Account({
   currencies,
   accountTypes,
   filters,
-  orderDirection,
 }: AccountProps & { filters: { search: string } }) {
   return (
     <AppLayout title="App Settings">
