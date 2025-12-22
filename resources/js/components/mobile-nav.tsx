@@ -1,4 +1,4 @@
-import { cn, isSameUrl } from '@/lib/utils';
+import { cn, resolveUrl } from '@/lib/utils';
 import type { NavItem, SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 
@@ -13,7 +13,9 @@ export function MobileNav({ NavItems }: { NavItems: NavItem[] }) {
             key={index}
             className={cn(
               'mt-2 grid h-[44px] w-[68.6px] grid-cols-1 grid-rows-[1fr_auto] place-items-center items-center overflow-hidden rounded-t-md md:h-[66px] md:w-[104px]',
-              isSameUrl(page.url, item.href) ? 'bg-beige-100' : 'bg-grey-900',
+              page.url.startsWith(resolveUrl(item.href))
+                ? 'bg-beige-100'
+                : 'bg-grey-900',
             )}
           >
             <Link
@@ -25,7 +27,7 @@ export function MobileNav({ NavItems }: { NavItems: NavItem[] }) {
                 weight="fill"
                 size={24}
                 className={
-                  isSameUrl(page.url, item.href)
+                  page.url.startsWith(resolveUrl(item.href))
                     ? 'text-green-custom'
                     : 'text-grey-300'
                 }
@@ -33,7 +35,7 @@ export function MobileNav({ NavItems }: { NavItems: NavItem[] }) {
               <span
                 className={cn(
                   'hidden text-xs leading-[150%] md:block',
-                  isSameUrl(page.url, item.href)
+                  page.url.startsWith(resolveUrl(item.href))
                     ? 'font-bold text-grey-900'
                     : 'font-normal text-grey-300',
                 )}
@@ -44,7 +46,7 @@ export function MobileNav({ NavItems }: { NavItems: NavItem[] }) {
             <div
               className={cn(
                 'h-1 w-full bg-green-custom',
-                isSameUrl(page.url, item.href)
+                page.url.startsWith(resolveUrl(item.href))
                   ? 'bg-green-custom'
                   : 'bg-grey-900',
               )}

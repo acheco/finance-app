@@ -4,7 +4,6 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { MobileNav } from '@/components/mobile-nav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { dashboard } from '@/routes';
-import { index as accounts } from '@/routes/accounts';
 import { NavItem } from '@/types';
 import {
   ArrowsDownUpIcon,
@@ -44,7 +43,7 @@ const NavItems: NavItem[] = [
   },
   {
     title: 'App Settings',
-    href: accounts(),
+    href: '/app-settings',
     icon: GearIcon,
   },
 ];

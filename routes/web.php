@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     return Inertia::render('dashboard');
   })->name('dashboard');
 
+  Route::redirect('app-settings', '/app-settings/accounts');
   Route::resource('app-settings/currencies', CurrencyController::class)->only(['index', 'update', 'store', 'destroy']);
   Route::resource('app-settings/accounts', AccountController::class)->only(['index', 'update', 'store', 'destroy']);
   Route::resource('app-settings/categories', CategoryController::class)->only(['index', 'update', 'store', 'destroy']);
