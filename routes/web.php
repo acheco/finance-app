@@ -1,9 +1,6 @@
 <?php
 
-use App\Http\Controllers\AppSettings\AccountController;
-use App\Http\Controllers\AppSettings\CategoryController;
-use App\Http\Controllers\AppSettings\CurrencyController;
-use App\Http\Controllers\AppSettings\SupplierController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -19,11 +16,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     return Inertia::render('dashboard');
   })->name('dashboard');
 
-  Route::redirect('app-settings', '/app-settings/accounts');
-  Route::resource('app-settings/currencies', CurrencyController::class)->only(['index', 'update', 'store', 'destroy']);
-  Route::resource('app-settings/accounts', AccountController::class)->only(['index', 'update', 'store', 'destroy']);
-  Route::resource('app-settings/categories', CategoryController::class)->only(['index', 'update', 'store', 'destroy']);
-  Route::resource('app-settings/suppliers', SupplierController::class)->only(['index', 'update', 'store', 'destroy']);
+  Route::resource('transactions', TransactionController::class)->only(['index', 'store', 'update', 'destroy']);
+
 });
 
 require __DIR__ . '/settings.php';

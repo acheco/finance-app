@@ -13,5 +13,10 @@ class TransactionType extends Model
   {
     return $this->hasMany(Category::class);
   }
-  
+
+  public function transactions(): hasMany
+  {
+    return $this->hasMany(Transaction::class);
+  }
+
 }

@@ -4,6 +4,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { MobileNav } from '@/components/mobile-nav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { dashboard } from '@/routes';
+import { index as transactions } from '@/routes/transactions';
 import { NavItem } from '@/types';
 import {
   ArrowsDownUpIcon,
@@ -22,8 +23,8 @@ const NavItems: NavItem[] = [
     icon: HouseIcon,
   },
   {
-    title: 'Transactions',
-    href: '#',
+    title: 'Transaction',
+    href: transactions(),
     icon: ArrowsDownUpIcon,
   },
   {
@@ -70,7 +71,7 @@ export default function AppSidebarLayout({ children, title }: AppSidebarProps) {
             NavItems={NavItems}
             className="row-span-full overflow-y-hidden"
           />
-          <main className="overflow-y-auto">
+          <main className="max-w-7xl overflow-y-auto">
             <AppHeader title={title} />
             {children}
           </main>

@@ -150,7 +150,27 @@ export interface Account {
   };
 }
 
+export interface Transaction {
+  id: number;
+  user_id: number;
+  account_id: number;
+  transaction_type_id: number;
+  transaction_type: string;
+  category_id: number;
+  category: string;
+  supplier_id: number;
+  supplier: string;
+  amount: number;
+  description: string;
+  transaction_date: string;
+  icon: string;
+  color: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;
 export type PaginatedSuppliers = PaginatedData<Supplier>;
 export type PaginatedAccounts = PaginatedData<Account>;
+export type PaginatedTransactions = PaginatedData<Transaction>;

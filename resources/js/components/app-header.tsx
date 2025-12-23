@@ -23,7 +23,6 @@ export function AppHeader({ title }: AppHeaderProps) {
         <h1 className="stroke-0 text-[32px] leading-[120%] font-bold text-grey-900">
           {title}
         </h1>
-
         <div className="ml-auto flex items-center space-x-2 lg:hidden">
           <div className="relative flex items-center space-x-1"></div>
           <DropdownMenu>
