@@ -22,7 +22,26 @@ class StoreTransactionsRequest extends FormRequest
   public function rules(): array
   {
     return [
-      //
+      'account_id' => 'required|exists:accounts,id',
+      'amount' => 'required|numeric',
+      'transaction_type_id' => 'required|exists:transaction_types,id',
+      'category_id' => 'required|exists:categories,id',
+      'supplier_id' => 'nullable|exists:suppliers,id',
+      'transaction_date' => 'required|date',
+      'notes' => 'nullable|string'
+    ];
+  }
+
+  public function attributes(): array
+  {
+    return [
+      'account_id' => 'account',
+      'amount' => 'amount',
+      'transaction_type_id' => 'transaction type',
+      'category_id' => 'category',
+      'supplier_id' => 'supplier',
+      'transaction_date' => 'transaction date',
+      'notes' => 'note',
     ];
   }
 }

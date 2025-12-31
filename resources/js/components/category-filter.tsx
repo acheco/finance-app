@@ -20,19 +20,20 @@ interface PageProps extends InertiaPageProps {
   };
 }
 
+interface CategoryFilterProps {
+  url: string;
+  usedCategories: { id: number; name: string }[];
+}
+
 export default function CategoryFilter({
   url,
-  categories,
-}: {
-  url: string;
-  categories: { id: string; name: string }[];
-}) {
+  usedCategories,
+}: CategoryFilterProps) {
   const { filters } = usePage<PageProps>().props;
   const [currentCategory, setCurrentCategory] = useState<string>(
     filters.category_id || 'all',
   );
   const isMobile = useIsMobile();
-
   function handleCategoryChange(categoryId: string) {
     setCurrentCategory(categoryId);
 
@@ -81,11 +82,13 @@ export default function CategoryFilter({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Transactions</SelectItem>
-          {categories.map((category) => (
+          {usedCategories.map((category) => (
             <SelectItem
               key={category.id}
               value={category.id.toString()}
-              className={cn(currentCategory === category.id && 'font-bold')}
+              className={cn(
+                currentCategory === category.id.toString() && 'font-bold',
+              )}
             >
               {category.name}
             </SelectItem>

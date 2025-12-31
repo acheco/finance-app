@@ -95,6 +95,29 @@ export interface AccountType {
   color: string;
 }
 
+export interface TransactionFormProps {
+  mode: 'create' | 'edit';
+  transactionTypes: {
+    id: number;
+    name: string;
+  }[];
+  categories: {
+    id: number;
+    name: string;
+    transaction_type_id: number;
+  }[];
+  accounts: {
+    id: number;
+    name: string;
+  }[];
+  suppliers: {
+    id: number;
+    name: string;
+    category_id: number;
+  }[];
+  defaultValue: Transaction;
+}
+
 export interface PaginatedData<T> {
   current_page: number;
   data: T[];
@@ -162,11 +185,15 @@ export interface Transaction {
   supplier: string;
   amount: number;
   description: string;
-  transaction_date: string;
+  transaction_date: Date;
   icon: string;
   color: string;
   created_at?: string;
   updated_at?: string;
+  can: {
+    update: boolean;
+    delete: boolean;
+  };
 }
 
 export type PaginatedCurrencies = PaginatedData<Currency>;

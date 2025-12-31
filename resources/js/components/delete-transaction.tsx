@@ -32,7 +32,8 @@ export default function DeleteTransaction({ transaction }: Props) {
       <DialogContent>
         <DialogTitle>
           Delete transaction made to {transaction.supplier} for{' '}
-          {currencyFormat(transaction.amount)} at {transaction.transaction_date}
+          {currencyFormat(transaction.amount)} at{' '}
+          {transaction.transaction_date.toString()}
         </DialogTitle>
         <DialogDescription>
           This action cannot be reversed, this will affect your account and

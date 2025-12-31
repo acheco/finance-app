@@ -16,7 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     return Inertia::render('dashboard');
   })->name('dashboard');
 
-  Route::resource('transactions', TransactionController::class)->only(['index', 'store', 'update', 'destroy']);
+  Route::resource('transactions', TransactionController::class);
 
 });
 

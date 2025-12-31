@@ -20,16 +20,18 @@ import {
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import AppLayout from '@/layouts/app-layout';
 import { cn, currencyFormat } from '@/lib/utils';
+import { create as transaction } from '@/routes/transactions';
 import { PaginatedTransactions } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { DotsThreeIcon } from '@phosphor-icons/react';
 
 interface TransactionsPageProps {
   transactions: PaginatedTransactions;
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  transactionTypes: { id: number; name: string }[];
+  categories: { id: number; name: string; transaction_type_id: number }[];
+  usedCategories: { id: number; name: string }[];
+  accounts: { id: number; name: string }[];
+  suppliers: { id: number; name: string; category_id: number }[];
   filters: {
     search: string;
     category_id: string;
@@ -39,7 +41,7 @@ interface TransactionsPageProps {
 
 export default function Transactions({
   transactions,
-  categories,
+  usedCategories,
   filters,
 }: TransactionsPageProps) {
   const isMobile = useIsMobile();
@@ -50,12 +52,14 @@ export default function Transactions({
 
       <section className="m-4 rounded-md bg-white shadow-sm">
         <div className="flex w-full items-center justify-between gap-4 px-5 py-6">
-          <TransactionFilters filters={filters} categories={categories} />
+          <TransactionFilters
+            filters={filters}
+            usedCategories={usedCategories}
+          />
 
-          <Button className="hidden lg:flex">+ Add New</Button>
-          <Button className="lg:hidden" size="icon">
-            +
-          </Button>
+          <Link href={transaction()}>
+            <Button className="cursor-pointer">+</Button>
+          </Link>
         </div>
 
         <div className="px-5">
@@ -121,7 +125,7 @@ export default function Transactions({
                     {transaction.category}
                   </TableCell>
                   <TableCell className="hidden text-xs text-grey-500 sm:table-cell">
-                    {transaction.transaction_date}
+                    {transaction.transaction_date.toString()}
                   </TableCell>
                   <TableCell
                     className={cn(
@@ -138,7 +142,7 @@ export default function Transactions({
                         </p>
                         {isMobile && (
                           <p className="text-xs font-normal text-grey-500">
-                            {transaction.transaction_date}
+                            {transaction.transaction_date.toString()}
                           </p>
                         )}
                       </div>
@@ -151,7 +155,7 @@ export default function Transactions({
                         </p>
                         {isMobile && (
                           <p className="text-xs font-normal text-grey-500">
-                            {transaction.transaction_date}
+                            {transaction.transaction_date.toString()}
                           </p>
                         )}
                       </div>

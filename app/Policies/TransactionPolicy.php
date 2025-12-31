@@ -6,7 +6,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class TransactionsPolicy
+class TransactionPolicy
 {
   /**
    * Determine whether the user can view any models.

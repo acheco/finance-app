@@ -5,10 +5,7 @@ import { router } from '@inertiajs/react';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 
 interface TransactionFiltersProps {
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  usedCategories: { id: number; name: string }[];
   filters: {
     search: string;
     category_id: string;
@@ -17,8 +14,8 @@ interface TransactionFiltersProps {
 }
 
 export default function TransactionFilters({
+  usedCategories,
   filters,
-  categories,
 }: TransactionFiltersProps) {
   function handleFilterChange(key: string, value: string) {
     if (key === 'category_id' && value === 'all') {
@@ -62,7 +59,10 @@ export default function TransactionFilters({
         data-testid="transaction-filters-dropdowns"
       >
         <SortingFilter url={transaction().url} />
-        <CategoryFilter url={transaction().url} categories={categories} />
+        <CategoryFilter
+          url={transaction().url}
+          usedCategories={usedCategories}
+        />
       </div>
     </div>
   );
