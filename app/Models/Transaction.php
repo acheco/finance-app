@@ -46,5 +46,5 @@ class Transaction extends Model
   {
     return $this->belongsTo(Supplier::class);
   }
-
+  
 }

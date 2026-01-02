@@ -39,4 +39,21 @@ class Account extends Model
     return $this->hasMany(Transaction::class);
   }
 
+  /**
+   * Adjust the balance of the account
+   */
+  public function adjustBalance($amount, $transactionTypeId)
+  {
+    if ($transactionTypeId == 1) {
+      $this->decrement('balance', $amount);
+    } elseif ($transactionTypeId == 2) {
+      $this->increment('balance', $amount);
+    }
+
+    $this->refresh();
+
+    return $this;
+
+  }
+
 }

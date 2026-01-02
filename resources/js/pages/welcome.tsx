@@ -74,7 +74,7 @@ export default function Welcome({
                 </Link>
               )}
             </div>
-            <div className="mt-24 grid gap-6 md:grid-cols-3">
+            <div className="mt-24 grid gap-6 px-4 md:grid-cols-3">
               <div className="group relative overflow-hidden rounded-3xl bg-grey-900 p-8 transition-all hover:-translate-y-1 hover:shadow-lg">
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-beige-100 shadow-sm dark:bg-muted">
                   <ArrowsDownUpIcon className="h-6 w-6" />

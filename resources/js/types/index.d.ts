@@ -95,8 +95,7 @@ export interface AccountType {
   color: string;
 }
 
-export interface TransactionFormProps {
-  mode: 'create' | 'edit';
+export interface CreateTransactionFormProps {
   transactionTypes: {
     id: number;
     name: string;
@@ -109,13 +108,13 @@ export interface TransactionFormProps {
   accounts: {
     id: number;
     name: string;
+    balance: number;
   }[];
   suppliers: {
     id: number;
     name: string;
     category_id: number;
   }[];
-  defaultValue: Transaction;
 }
 
 export interface PaginatedData<T> {

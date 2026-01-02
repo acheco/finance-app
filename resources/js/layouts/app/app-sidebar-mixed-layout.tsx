@@ -52,16 +52,27 @@ const NavItems: NavItem[] = [
 interface AppSidebarProps {
   title: string;
   children: React.ReactNode;
+  withReturnButton?: boolean;
+  backUrl?: string;
 }
 
-export default function AppSidebarLayout({ children, title }: AppSidebarProps) {
+export default function AppSidebarLayout({
+  children,
+  title,
+  withReturnButton,
+  backUrl,
+}: AppSidebarProps) {
   const isMobile = useIsMobile();
 
   return (
     <AppShell variant="mixed">
       {isMobile ? (
         <div className="grid h-screen grid-cols-1 grid-rows-[94px_1fr_52px] overflow-y-auto md:grid-rows-[94px_1fr_74px] lg:hidden">
-          <AppHeader title={title} />
+          <AppHeader
+            title={title}
+            withReturnButton={withReturnButton}
+            backUrl={backUrl}
+          />
           {children}
           <MobileNav NavItems={NavItems} />
         </div>
@@ -72,7 +83,11 @@ export default function AppSidebarLayout({ children, title }: AppSidebarProps) {
             className="row-span-full overflow-y-hidden"
           />
           <main className="max-w-7xl overflow-y-auto">
-            <AppHeader title={title} />
+            <AppHeader
+              title={title}
+              withReturnButton={withReturnButton}
+              backUrl={backUrl}
+            />
             {children}
           </main>
         </div>

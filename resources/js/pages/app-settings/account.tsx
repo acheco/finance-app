@@ -93,7 +93,11 @@ export default function Account({
                   You don't have any accounts yet. Create one to get started.
                 </EmptyDescription>
                 <EmptyContent>
-                  <Button>New Account</Button>
+                  <AccountForm
+                    mode="create"
+                    currencies={currencies}
+                    accountTypes={accountTypes}
+                  />
                 </EmptyContent>
               </Empty>
             ) : (

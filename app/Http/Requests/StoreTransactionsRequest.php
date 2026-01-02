@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTransactionsRequest extends FormRequest
 {
@@ -24,8 +25,12 @@ class StoreTransactionsRequest extends FormRequest
     return [
       'account_id' => 'required|exists:accounts,id',
       'amount' => 'required|numeric',
-      'transaction_type_id' => 'required|exists:transaction_types,id',
-      'category_id' => 'required|exists:categories,id',
+      'transaction_type_id' => 'required|integer|exists:transaction_types,id',
+      'category_id' => [
+        Rule::requiredIf(function () {
+          return in_array($this->transaction_type_id, [1, 2]);
+        })
+      ],
       'supplier_id' => 'nullable|exists:suppliers,id',
       'transaction_date' => 'required|date',
       'notes' => 'nullable|string'

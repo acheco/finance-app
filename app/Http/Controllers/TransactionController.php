@@ -73,7 +73,6 @@ class TransactionController extends Controller
         'transaction_date' => $transaction->transaction_date,
         'created_at' => $transaction->created_at->format('d-m-Y'),
         'can' => [
-          'create' => request()->user()->can('create', Transaction::class),
           'delete' => request()->user()->can('delete', $transaction),
           'update' => request()->user()->can('update', $transaction),
         ],
@@ -101,22 +100,25 @@ class TransactionController extends Controller
   {
     Gate::authorize('create', Transaction::class);
 
-    DB::transaction(function () use ($request) {
+    try {
 
-      try {
+      DB::transaction(function () use ($request) {
+
         $validated = $request->validated();
-
         $request->user()->transactions()->create($validated);
 
-        return redirect()->back()->with('success', 'Transaction has been created.');
+        $account = Account::find($validated['account_id']);
+        $account->adjustBalance($validated['amount'], $validated['transaction_type_id']);
 
-      } catch (Throwable $e) {
-        Log::error("Error storing transaction: " . $e->getMessage());
-        return back()->withInput()->with('error',
-          "An error occurred while creating the transaction, please try again.");
-      }
-    });
+      });
 
+      return redirect()->back()->with('success', 'Transaction has been created.');
+
+    } catch (Throwable $e) {
+      Log::error("Error storing transaction: " . $e->getMessage());
+      return back()->withInput()->with('error',
+        "An error occurred while creating the transaction, please try again.");
+    }
 
   }
 
@@ -146,7 +148,7 @@ class TransactionController extends Controller
 
     $accounts = Account::where('user_id', $user->id)
       ->where('is_active', true)
-      ->select(['id', 'name'])->get();
+      ->select(['id', 'name', 'balance'])->get();
 
     return Inertia::render('transactions/create', [
       'transactionTypes' => $transactionTypes,
