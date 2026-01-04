@@ -1,5 +1,4 @@
 import TransactionController from '@/actions/App/Http/Controllers/TransactionController';
-import { CalendarField } from '@/components/calendar-field';
 import { Button } from '@/components/ui/button';
 import {
   Field,
@@ -11,6 +10,7 @@ import {
   FieldSet
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,30 +28,36 @@ export default function CreateTransaction({
   suppliers,
   accounts,
 }: CreateTransactionFormProps) {
-  const [supplierWithCategory, setSupplierWithCategory] = useState<
-    typeof suppliers
-  >([]);
   const [transactionType, setTransactionType] = useState<number>(1);
-  const [balance, setBalance] = useState<string>();
+  const [selectedAccount, setSelectedAccount] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [currentDate, setCurrentDate] = useState(
+    new Date().toISOString().split('T')[0],
+  );
+
+  function handleTransactionTypeChange(transactionTypeId: number) {
+    setTransactionType(transactionTypeId);
+    setSelectedCategory('');
+  }
 
   const filteredCategories = categories.filter(
     (category) => category.transaction_type_id === transactionType,
   );
 
-  function handleBalanceChange(balance: number) {
-    const formattedBalance = currencyFormat(balance);
-    setBalance(formattedBalance);
-  }
+  const supplierWithCategory = selectedCategory
+    ? suppliers.filter(
+        (supplier) => supplier.category_id === Number(selectedCategory),
+      )
+    : [];
 
-  function handleCategoryChange(categoryId: number) {
-    const filtered = suppliers.filter(
-      (supplier) => supplier.category_id === categoryId,
-    );
-    setSupplierWithCategory(filtered);
-  }
+  const account = selectedAccount
+    ? accounts.find((account) => account.id === Number(selectedAccount))
+    : undefined;
 
-  function handleTransactionTypeChange(transactionTypeId: number) {
-    setTransactionType(transactionTypeId);
+  function resetFormInputs() {
+    setSelectedAccount('');
+    setSelectedCategory('');
+    setCurrentDate(new Date().toISOString().split('T')[0]);
   }
 
   return (
@@ -65,7 +71,8 @@ export default function CreateTransaction({
       <section className="m-4 rounded-md bg-white p-6 shadow-sm sm:items-center lg:max-w-2xl">
         <Form
           {...TransactionController.store.form()}
-          resetOnSuccess={true}
+          onSuccess={() => resetFormInputs()}
+          resetOnSuccess
           className="space-y-6"
         >
           {({ processing, errors, resetAndClearErrors }) => (
@@ -96,9 +103,7 @@ export default function CreateTransaction({
                         name="transaction_type_id"
                         value={type.id.toString()}
                         onClick={() => handleTransactionTypeChange(type.id)}
-                        className={cn(
-                          type.id === transactionType && 'cursor-not-allowed',
-                        )}
+                        disabled={type.id === transactionType}
                       >
                         {type.name}
                       </ToggleGroupItem>
@@ -118,7 +123,12 @@ export default function CreateTransaction({
                         'Account'
                       )}
                     </FieldLabel>
-                    <Select name="account_id">
+                    <Select
+                      name="account_id"
+                      required
+                      value={selectedAccount || ''}
+                      onValueChange={setSelectedAccount}
+                    >
                       <SelectTrigger id="account" className="min-h-11">
                         <SelectValue placeholder="Select account" />
                       </SelectTrigger>
@@ -127,7 +137,6 @@ export default function CreateTransaction({
                           <SelectItem
                             key={account.id}
                             value={account.id.toString()}
-                            onClick={() => handleBalanceChange(account.balance)}
                           >
                             {account.name}
                           </SelectItem>
@@ -136,19 +145,20 @@ export default function CreateTransaction({
                     </Select>
                     <FieldError>{errors.account_id}</FieldError>
                   </Field>
+
                   <Field>
                     <FieldLabel>Balance</FieldLabel>
-                    <Input
-                      type="text"
-                      disabled
-                      value={balance}
-                      step={0.01}
-                      placeholder="$0.00"
+                    <Label
                       className={cn(
-                        'min-h-11',
-                        Number(balance) < 0 && 'text-red-400',
+                        'flex min-h-11 items-center rounded-md border px-2 text-muted-foreground',
+                        account?.balance.toString().at(0) === '-' &&
+                          'text-red-400',
                       )}
-                    />
+                    >
+                      {account?.balance
+                        ? currencyFormat(account.balance)
+                        : '$0.00'}
+                    </Label>
                   </Field>
                 </div>
 
@@ -187,6 +197,7 @@ export default function CreateTransaction({
                     min={0.0}
                     className="min-h-11"
                     placeholder="$0.00"
+                    required
                   />
                   <FieldError>{errors.amount}</FieldError>
                 </Field>
@@ -197,9 +208,8 @@ export default function CreateTransaction({
                       <FieldLabel htmlFor="categories">Category</FieldLabel>
                       <Select
                         name="category_id"
-                        onValueChange={(value) =>
-                          handleCategoryChange(Number(value))
-                        }
+                        value={selectedCategory}
+                        onValueChange={setSelectedCategory}
                         disabled={filteredCategories.length === 0}
                       >
                         <SelectTrigger id="categories" className="min-h-11">
@@ -226,12 +236,12 @@ export default function CreateTransaction({
                         disabled={supplierWithCategory.length === 0}
                       >
                         <SelectTrigger id="supplier" className="min-h-11">
-                          <SelectValue placeholder="Select a supplier" />
+                          <SelectValue placeholder="Select the supplier" />
                         </SelectTrigger>
                         <SelectContent>
-                          {supplierWithCategory.map((supplier, index) => (
+                          {supplierWithCategory.map((supplier) => (
                             <SelectItem
-                              key={index + supplier.name + supplier.id}
+                              key={supplier.id}
                               value={supplier.id.toString()}
                             >
                               {supplier.name}
@@ -246,7 +256,14 @@ export default function CreateTransaction({
 
                 <Field>
                   <FieldLabel htmlFor="date">Transaction Date</FieldLabel>
-                  <CalendarField name="transaction_date" />
+                  <input
+                    id="date"
+                    type="date"
+                    name="transaction_date"
+                    value={currentDate.toString()}
+                    onChange={(e) => setCurrentDate(e.target.value)}
+                    className="min-h-11 rounded-md border px-2"
+                  />
                   <FieldError>{errors.transaction_date}</FieldError>
                 </Field>
 

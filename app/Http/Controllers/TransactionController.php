@@ -185,8 +185,29 @@ class TransactionController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(Transaction $transactions)
+  public function destroy(Transaction $transaction)
   {
-    Gate::authorize('delete', $transactions);
+    Gate::authorize('delete', $transaction);
+
+    try {
+
+      DB::transaction(function () use ($transaction) {
+        $account = Account::find($transaction->account_id);
+
+        if ($transaction->transaction_type_id == 1) {
+          $account->increment('balance', $transaction->amount);
+        } elseif ($transaction->transaction_type_id == 2) {
+          $account->decrement('balance', $transaction->amount);
+        }
+        $transaction->delete();
+      });
+
+      return redirect()->back()->with('success', 'Transaction has been deleted.');
+
+    } catch (Throwable $e) {
+      Log::error("Error deleting transaction: " . $e->getMessage());
+      return redirect()->back()->with('error', 'An error occurred while deleting the transaction.');
+    }
+
   }
 }

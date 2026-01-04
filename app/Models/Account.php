@@ -42,7 +42,7 @@ class Account extends Model
   /**
    * Adjust the balance of the account
    */
-  public function adjustBalance($amount, $transactionTypeId)
+  public function adjustBalance($amount, $transactionTypeId): static
   {
     if ($transactionTypeId == 1) {
       $this->decrement('balance', $amount);

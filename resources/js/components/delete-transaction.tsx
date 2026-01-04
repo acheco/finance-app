@@ -13,13 +13,18 @@ import { currencyFormat } from '@/lib/utils';
 import { Transaction } from '@/types';
 import { Form } from '@inertiajs/react';
 import { TrashIcon } from '@phosphor-icons/react';
+import { useState } from 'react';
 
 interface Props {
   transaction: Transaction;
 }
 export default function DeleteTransaction({ transaction }: Props) {
+  const [open, setOpen] = useState(false);
+  const transactionBalance = currencyFormat(transaction.amount);
+  const transactionDate = new Date(transaction.transaction_date);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="ghost"
@@ -32,14 +37,18 @@ export default function DeleteTransaction({ transaction }: Props) {
       <DialogContent>
         <DialogTitle>
           Delete transaction made to {transaction.supplier} for{' '}
-          {currencyFormat(transaction.amount)} at{' '}
-          {transaction.transaction_date.toString()}
+          {transactionBalance} on {transactionDate.toLocaleDateString()}
         </DialogTitle>
         <DialogDescription>
           This action cannot be reversed, this will affect your account and
           budgets balance.
         </DialogDescription>
-        <Form {...TransactionController.destroy.form(transaction.id)}>
+        <Form
+          {...TransactionController.destroy.form(transaction.id)}
+          options={{ preserveScroll: true }}
+          onSuccess={() => setOpen(false)}
+          resetOnSuccess
+        >
           {({ resetAndClearErrors, processing }) => (
             <DialogFooter>
               <DialogClose asChild>

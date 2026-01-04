@@ -1,5 +1,6 @@
 import DeleteTransaction from '@/components/delete-transaction';
 import Icon from '@/components/icon';
+import LockedField from '@/components/locked-field';
 import TablePagination from '@/components/table-pagination';
 import TransactionFilters from '@/components/transaction-filter';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -29,7 +31,11 @@ import { cn, currencyFormat } from '@/lib/utils';
 import { create as transaction } from '@/routes/transactions';
 import { PaginatedTransactions } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { ArrowsDownUpIcon, DotsThreeIcon } from '@phosphor-icons/react';
+import {
+  ArrowsDownUpIcon,
+  DotsThreeIcon,
+  PencilSimpleLineIcon,
+} from '@phosphor-icons/react';
 
 interface TransactionsPageProps {
   transactions: PaginatedTransactions;
@@ -193,30 +199,46 @@ export default function Transactions({
                       )}
                     </TableCell>
                     <TableCell className="w-[40px]">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <DotsThreeIcon
-                              weight="bold"
-                              size={20}
-                              color="text-grey-900"
-                            />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <DeleteTransaction transaction={transaction} />
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      {transaction.can.update || transaction.can.delete ? (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <DotsThreeIcon weight="regular" size={18} />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            {transaction.can.delete && (
+                              <DropdownMenuItem asChild>
+                                <DeleteTransaction transaction={transaction} />
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuSeparator />
+                            {transaction.can.update && (
+                              <DropdownMenuItem asChild>
+                                <Link
+                                  href={'#'}
+                                  className="w-full justify-start px-3 py-2"
+                                >
+                                  <PencilSimpleLineIcon
+                                    weight="fill"
+                                    color="#826CB0"
+                                  />
+                                  Edit
+                                </Link>
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      ) : (
+                        <LockedField />
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
 
-            <TablePagination links={transactions.links} className={'mt-6'} />
+            <TablePagination links={transactions.links} className={'py-6'} />
           </div>
         </section>
       )}
