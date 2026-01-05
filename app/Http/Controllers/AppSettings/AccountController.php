@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\AppSettings;
 
-use App\AccountType;
+use App\Enums\AccountType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class AccountController extends Controller
 {
@@ -93,7 +94,7 @@ class AccountController extends Controller
 
       return redirect()->back()->with('success', 'Account has been created.');
 
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
 
       Log::error('Error storing account: ' . $e->getMessage());
       return back()->withInput()->with('error', ' "Error creating account."');
@@ -116,7 +117,7 @@ class AccountController extends Controller
 
       return redirect()->back()->with('success', 'Account has been updated.');
 
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
       Log::error('Error updating account: ' . $e->getMessage());
       return back()->withInput()->with('error', ' "Error updating account."');
     }

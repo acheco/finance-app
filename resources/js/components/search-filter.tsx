@@ -55,7 +55,7 @@ export default function SearchFilter({
       <FieldLabel htmlFor="search" className={showLabel ? '' : 'sr-only'}>
         {label}
       </FieldLabel>
-      <InputGroup className="max-w-lg bg-white">
+      <InputGroup className="w-auto bg-white">
         <InputGroupInput
           id="search"
           name="search"

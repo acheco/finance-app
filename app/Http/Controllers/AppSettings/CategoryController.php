@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\AppSettings;
 
+use App\Enums\Color;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
@@ -54,9 +55,15 @@ class CategoryController extends Controller
         ]
       ]);
 
+    $colors = collect(Color::cases())->map(fn($color) => [
+      'value' => $color->value,
+      'label' => $color->label(),
+    ]);
+
     return Inertia::render('app-settings/category', [
       'categories' => $categories,
       'filters' => $filters,
+      'colors' => $colors,
     ]);
   }
 

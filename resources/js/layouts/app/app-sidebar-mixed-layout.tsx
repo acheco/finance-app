@@ -4,7 +4,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { MobileNav } from '@/components/mobile-nav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { dashboard } from '@/routes';
-import { index as accounts } from '@/routes/accounts';
+import { index as transactions } from '@/routes/transactions';
 import { NavItem } from '@/types';
 import {
   ArrowsDownUpIcon,
@@ -23,8 +23,8 @@ const NavItems: NavItem[] = [
     icon: HouseIcon,
   },
   {
-    title: 'Transactions',
-    href: '#',
+    title: 'Transaction',
+    href: transactions(),
     icon: ArrowsDownUpIcon,
   },
   {
@@ -44,7 +44,7 @@ const NavItems: NavItem[] = [
   },
   {
     title: 'App Settings',
-    href: accounts(),
+    href: '/app-settings',
     icon: GearIcon,
   },
 ];
@@ -52,16 +52,27 @@ const NavItems: NavItem[] = [
 interface AppSidebarProps {
   title: string;
   children: React.ReactNode;
+  withReturnButton?: boolean;
+  backUrl?: string;
 }
 
-export default function AppSidebarLayout({ children, title }: AppSidebarProps) {
+export default function AppSidebarLayout({
+  children,
+  title,
+  withReturnButton,
+  backUrl,
+}: AppSidebarProps) {
   const isMobile = useIsMobile();
 
   return (
     <AppShell variant="mixed">
       {isMobile ? (
         <div className="grid h-screen grid-cols-1 grid-rows-[94px_1fr_52px] overflow-y-auto md:grid-rows-[94px_1fr_74px] lg:hidden">
-          <AppHeader title={title} />
+          <AppHeader
+            title={title}
+            withReturnButton={withReturnButton}
+            backUrl={backUrl}
+          />
           {children}
           <MobileNav NavItems={NavItems} />
         </div>
@@ -71,8 +82,12 @@ export default function AppSidebarLayout({ children, title }: AppSidebarProps) {
             NavItems={NavItems}
             className="row-span-full overflow-y-hidden"
           />
-          <main className="overflow-y-auto">
-            <AppHeader title={title} />
+          <main className="max-w-7xl overflow-y-auto">
+            <AppHeader
+              title={title}
+              withReturnButton={withReturnButton}
+              backUrl={backUrl}
+            />
             {children}
           </main>
         </div>

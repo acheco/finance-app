@@ -95,6 +95,52 @@ export interface AccountType {
   color: string;
 }
 
+export interface CreateTransactionFormProps {
+  transactionTypes: {
+    id: number;
+    name: string;
+  }[];
+  categories: {
+    id: number;
+    name: string;
+    transaction_type_id: number;
+  }[];
+  accounts: {
+    id: number;
+    name: string;
+    balance: number;
+  }[];
+  suppliers: {
+    id: number;
+    name: string;
+    category_id: number;
+  }[];
+}
+
+export interface TransactionFormProps {
+  mode: 'edit' | 'create';
+  defaultValues?: Transaction;
+  transactionTypes: {
+    id: number;
+    name: string;
+  }[];
+  categories: {
+    id: number;
+    name: string;
+    transaction_type_id: number;
+  }[];
+  accounts: {
+    id: number;
+    name: string;
+    balance: number;
+  }[];
+  suppliers: {
+    id: number;
+    name: string;
+    category_id: number;
+  }[];
+}
+
 export interface PaginatedData<T> {
   current_page: number;
   data: T[];
@@ -150,7 +196,32 @@ export interface Account {
   };
 }
 
+export interface Transaction {
+  id: number;
+  user_id: number;
+  account_id: number;
+  transaction_type_id: number;
+  transaction_type: string;
+  category_id: number;
+  category: string;
+  supplier_id: number;
+  supplier: string;
+  amount: number;
+  description: string;
+  transaction_date: Date | string;
+  notes: string;
+  icon: string;
+  color: string;
+  created_at?: string;
+  updated_at?: string;
+  can: {
+    update: boolean;
+    delete: boolean;
+  };
+}
+
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;
 export type PaginatedSuppliers = PaginatedData<Supplier>;
 export type PaginatedAccounts = PaginatedData<Account>;
+export type PaginatedTransactions = PaginatedData<Transaction>;
