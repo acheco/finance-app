@@ -28,6 +28,7 @@ createInertiaApp({
     color: '#4B5563',
   },
   defaults: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     visitOptions: (href, options) => {
       return { viewTransition: true };
     },
