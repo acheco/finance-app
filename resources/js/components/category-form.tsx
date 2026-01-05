@@ -8,77 +8,20 @@ import {
   DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/components/ui/dialog';
 import { Field, FieldError, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { Category } from '@/types';
 import { Form } from '@inertiajs/react';
 import { PencilSimpleLineIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 
-const colors = [
-  { key: '#277C78', name: 'Green' },
-  { key: '#F2CDAC', name: 'Yellow' },
-  { key: '#82C9D7', name: 'Cyan' },
-  { key: '#626070', name: 'Navy' },
-  { key: '#C94736', name: 'Red' },
-  { key: '#826CB0', name: 'Purple' },
-  { key: '#AF81BA', name: 'Light Pink' },
-  { key: '#F2994A', name: 'Orange' },
-  { key: '#597C7C', name: 'Turquoise' },
-  { key: '#93674F', name: 'Brown' },
-  { key: '#934F6F', name: 'Magenta' },
-  { key: '#7F9161', name: 'Army Green' },
-  { key: '#CAB361', name: 'Goldenrod' },
-  { key: '#F2C94C', name: 'Khaki' },
-  { key: '#619393', name: 'Teal' },
-  { key: '#936F93', name: 'Violet' },
-  { key: '#939361', name: 'Olive Green' },
-  { key: '#936193', name: 'Light Purple' },
-  { key: '#C99361', name: 'Sandy Brown' },
-  { key: '#6193C9', name: 'Light Blue' },
-  { key: '#93C961', name: 'Lime Green' },
-  { key: '#C96193', name: 'Pink' },
-  { key: '#93C993', name: 'Sea Green' },
-  { key: '#C9C961', name: 'Yellow Green' },
-  { key: '#C961C9', name: 'Magenta Pink' },
-  { key: '#61C9C9', name: 'Turquoise Blue' },
-  { key: '#C9C993', name: 'Beige' },
-  { key: '#C9C9C9', name: 'Silver' },
-  { key: '#616161', name: 'Gray' },
-  { key: '#E63946', name: 'Crimson' },
-  { key: '#457B9D', name: 'Steel Blue' },
-  { key: '#A8DADC', name: 'Powder Blue' },
-  { key: '#F4A261', name: 'Sandy Orange' },
-  { key: '#E76F51', name: 'Burnt Sienna' },
-  { key: '#2A9D8F', name: 'Persian Green' },
-  { key: '#E9C46A', name: 'Saffron' },
-  { key: '#264653', name: 'Charcoal' },
-  { key: '#8B5A3C', name: 'Copper' },
-  { key: '#6A4C93', name: 'Royal Purple' },
-  { key: '#FF6B6B', name: 'Coral' },
-  { key: '#4ECDC4', name: 'Aquamarine' },
-  { key: '#FFE66D', name: 'Mustard' },
-  { key: '#95E1D3', name: 'Mint' },
-  { key: '#F38181', name: 'Light Coral' },
-  { key: '#AA96DA', name: 'Lavender' },
-  { key: '#FCBAD3', name: 'Bubblegum' },
-  { key: '#A8E6CF', name: 'Seafoam' },
-  { key: '#FFD3B6', name: 'Peach' },
-  { key: '#FFAAA5', name: 'Salmon' },
-  { key: '#FF8B94', name: 'Rose' },
-];
-
-type CategoryFormProps =
+type CategoryFormProps = {
+  colors: { value: string; label: string }[];
+} & (
   | {
       mode: 'create';
       defaultValue?: never;
@@ -86,9 +29,11 @@ type CategoryFormProps =
   | {
       mode: 'edit';
       defaultValue: Category;
-    };
+    }
+);
 
 export default function CategoryForm({
+  colors,
   mode,
   defaultValue,
 }: CategoryFormProps) {
@@ -166,13 +111,13 @@ export default function CategoryForm({
                   </SelectTrigger>
                   <SelectContent>
                     {colors.map((color, index) => (
-                      <SelectItem key={index} value={color.key}>
+                      <SelectItem key={index} value={color.value}>
                         <div className="flex items-center gap-2">
                           <div
                             className="h-4 w-4 rounded-full"
-                            style={{ backgroundColor: color.key }}
+                            style={{ backgroundColor: color.value }}
                           />
-                          <p>{color.name}</p>
+                          <p>{color.label}</p>
                         </div>
                       </SelectItem>
                     ))}

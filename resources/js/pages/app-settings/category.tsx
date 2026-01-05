@@ -21,12 +21,17 @@ import { Head } from '@inertiajs/react';
 
 interface CategoryPageProps {
   categories: PaginatedCategories;
+  colors: { value: string; label: string }[];
   filters: {
     search: string;
   };
 }
 
-export default function Category({ categories, filters }: CategoryPageProps) {
+export default function Category({
+  categories,
+  colors,
+  filters,
+}: CategoryPageProps) {
   return (
     <AppLayout title="App Settings">
       <Head title="Category settings" />
@@ -46,7 +51,7 @@ export default function Category({ categories, filters }: CategoryPageProps) {
               onlyProps={['categories', 'filters']}
             />
 
-            <CategoryForm mode="create" />
+            <CategoryForm mode="create" colors={colors} />
           </div>
 
           <div className="rounded-md bg-white p-8 shadow-sm">
@@ -81,7 +86,11 @@ export default function Category({ categories, filters }: CategoryPageProps) {
                         <DeleteCategory category={category} />
                       )}
                       {category.can.update && (
-                        <CategoryForm mode="edit" defaultValue={category} />
+                        <CategoryForm
+                          mode="edit"
+                          defaultValue={category}
+                          colors={colors}
+                        />
                       )}
                       {!category.can.update && !category.can.delete && (
                         <LockedField />

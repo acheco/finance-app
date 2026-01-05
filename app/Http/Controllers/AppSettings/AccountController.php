@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\AppSettings;
 
-use App\AccountType;
+use App\Enums\AccountType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
