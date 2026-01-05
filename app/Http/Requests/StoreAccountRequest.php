@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\AccountType;
+use App\Enums\AccountType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 

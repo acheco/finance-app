@@ -1,3 +1,4 @@
+import TransactionController from '@/actions/App/Http/Controllers/TransactionController';
 import DeleteTransaction from '@/components/delete-transaction';
 import Icon from '@/components/icon';
 import LockedField from '@/components/locked-field';
@@ -28,7 +29,6 @@ import {
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import AppLayout from '@/layouts/app-layout';
 import { cn, currencyFormat } from '@/lib/utils';
-import { create as transaction } from '@/routes/transactions';
 import { PaginatedTransactions } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import {
@@ -74,7 +74,7 @@ export default function Transactions({
               accurate view of your finances.
             </EmptyDescription>
             <EmptyContent>
-              <Link href={transaction()}>
+              <Link href={TransactionController.create()}>
                 <Button className="cursor-pointer">Register Transaction</Button>
               </Link>
             </EmptyContent>
@@ -88,7 +88,7 @@ export default function Transactions({
               usedCategories={usedCategories}
             />
 
-            <Link href={transaction()}>
+            <Link href={TransactionController.create()}>
               <Button className="cursor-pointer">+</Button>
             </Link>
           </div>
@@ -216,7 +216,7 @@ export default function Transactions({
                             {transaction.can.update && (
                               <DropdownMenuItem asChild>
                                 <Link
-                                  href={'#'}
+                                  href={TransactionController.edit(transaction)}
                                   className="w-full justify-start px-3 py-2"
                                 >
                                   <PencilSimpleLineIcon

@@ -117,6 +117,30 @@ export interface CreateTransactionFormProps {
   }[];
 }
 
+export interface TransactionFormProps {
+  mode: 'edit' | 'create';
+  defaultValues?: Transaction;
+  transactionTypes: {
+    id: number;
+    name: string;
+  }[];
+  categories: {
+    id: number;
+    name: string;
+    transaction_type_id: number;
+  }[];
+  accounts: {
+    id: number;
+    name: string;
+    balance: number;
+  }[];
+  suppliers: {
+    id: number;
+    name: string;
+    category_id: number;
+  }[];
+}
+
 export interface PaginatedData<T> {
   current_page: number;
   data: T[];
@@ -184,7 +208,8 @@ export interface Transaction {
   supplier: string;
   amount: number;
   description: string;
-  transaction_date: Date;
+  transaction_date: Date | string;
+  notes: string;
   icon: string;
   color: string;
   created_at?: string;

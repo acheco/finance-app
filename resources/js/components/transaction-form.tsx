@@ -1,19 +1,15 @@
-import TransactionController from '@/actions/App/Http/Controllers/TransactionController';
-import { CalendarField } from '@/components/calendar-field';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Field, FieldError, FieldLabel, FieldSet } from '@/components/ui/field';
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -23,233 +19,297 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
-import { Transaction } from '@/types';
-import { Form, router } from '@inertiajs/react';
-import { PencilSimpleLineIcon } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { cn, currencyFormat } from '@/lib/utils';
+import { index, store, update } from '@/routes/transactions';
+import { TransactionFormProps } from '@/types';
+import { Link, useForm } from '@inertiajs/react';
+import { ArrowLeftIcon, ArrowRightIcon } from '@phosphor-icons/react';
+import React from 'react';
 
-type TransactionFormProps = {
-  suppliers: { id: number; name: string; category_id: number }[];
-  transactionTypes: { id: number; name: string }[];
-  accounts: { id: number; name: string }[];
-  categories: { id: number; name: string; transaction_type_id: number }[];
-} & (
-  | { mode: 'create'; defaultValue?: never }
-  | { mode: 'edit'; defaultValue: Transaction }
-);
+type TransactionFormData = {
+  transaction_type_id: number;
+  account_id: string;
+  to_account: string;
+  amount: string | number;
+  category_id: string;
+  supplier_id: string;
+  transaction_date: string;
+  notes: string;
+};
 
 export default function TransactionForm({
-  suppliers,
-  transactionTypes,
+  mode,
+  defaultValues,
   accounts,
   categories,
-  mode,
-  defaultValue,
+  suppliers,
+  transactionTypes,
 }: TransactionFormProps) {
-  const [openModal, setOpenModal] = useState(false);
-  const [supplierWithCategory, setSupplierWithCategory] = useState<
-    typeof suppliers
-  >([]);
-  const [transactionType, setTransactionType] = useState(
-    defaultValue?.transaction_type_id || 1,
-  );
+  const { data, setData, post, put, processing, errors, resetAndClearErrors } =
+    useForm<TransactionFormData>({
+      transaction_type_id: defaultValues?.transaction_type_id ?? 1,
+      account_id: defaultValues?.account_id?.toString() ?? '',
+      to_account: '',
+      amount: defaultValues?.amount ?? '',
+      category_id: defaultValues?.category_id?.toString() ?? '',
+      supplier_id: defaultValues?.supplier_id?.toString() ?? '',
+      transaction_date:
+        (defaultValues?.transaction_date as string) ??
+        new Date().toISOString().split('T')[0],
+      notes: defaultValues?.notes ?? '',
+    });
+
+  const title = mode === 'edit' ? 'Edit Transaction' : 'Add New Transaction';
+  const description =
+    mode === 'edit'
+      ? 'Feel free to update your transaction, Please note this will affect your budgets and reports.'
+      : 'Enter the details of your transaction to keep track of your spending and income';
 
   const filteredCategories = categories.filter(
-    (category) => category.transaction_type_id === transactionType,
+    (category) => category.transaction_type_id === data.transaction_type_id,
   );
 
-  const submitLabel = mode === 'edit' ? 'Save Changes' : 'Add Transaction';
+  const supplierWithCategory = data.category_id
+    ? suppliers.filter((s) => s.category_id === Number(data.category_id))
+    : [];
 
-  if (!suppliers || !accounts) {
-    router.reload({
-      only: ['suppliers', 'accounts'],
-    });
+  const account = data.account_id
+    ? accounts.find((a) => a.id === Number(data.account_id))
+    : undefined;
+
+  function handleTransactionTypeChange(typeId: number) {
+    setData((prev) => ({
+      ...prev,
+      transaction_type_id: typeId,
+      category_id: '',
+      supplier_id: '',
+    }));
   }
 
-  const handleCategoryChange = (categoryId: number) => {
-    const filtered = suppliers.filter(
-      (supplier) => supplier.category_id === categoryId,
-    );
-    setSupplierWithCategory(filtered);
-  };
-
-  const handleTransactionTypeChange = (transactionTypeId: number) => {
-    setTransactionType(transactionTypeId);
-  };
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (mode === 'edit' && defaultValues?.id) {
+      put(update(defaultValues.id).url);
+    } else {
+      post(store().url);
+      resetAndClearErrors();
+    }
+  }
 
   return (
-    <Dialog open={openModal} onOpenChange={setOpenModal}>
-      <DialogTrigger asChild>
-        {mode === 'edit' ? (
-          <Button variant="ghost" size="icon-sm">
-            <PencilSimpleLineIcon weight="fill" color="#826CB0" />
-          </Button>
-        ) : (
-          <Button>+</Button>
-        )}
-      </DialogTrigger>
-      <DialogContent>
-        <DialogTitle className="text-[32px] font-bold">
-          {mode === 'edit'
-            ? `Editing ${defaultValue?.category}`
-            : 'Add Transaction'}
-        </DialogTitle>
-        <DialogDescription>
-          {mode === 'edit'
-            ? 'Editing this transaction .'
-            : 'Register a new Transaction'}
-        </DialogDescription>
-        <Form {...TransactionController.store.form()} className="space-y-6">
-          {({ processing, errors, resetAndClearErrors }) => (
-            <FieldSet>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <FieldGroup>
+        <FieldSet>
+          <FieldLegend className="font-bold">{title}</FieldLegend>
+          <FieldDescription>{description}</FieldDescription>
+
+          {/* Transaction Type */}
+          <Field>
+            <ToggleGroup
+              type="single"
+              variant="outline"
+              value={data.transaction_type_id.toString()}
+              onValueChange={(val) =>
+                val && handleTransactionTypeChange(Number(val))
+              }
+              className="max-w-fit"
+            >
+              {transactionTypes.map((type) => (
+                <ToggleGroupItem key={type.id} value={type.id.toString()}>
+                  {type.name}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+            <FieldError>{errors.transaction_type_id}</FieldError>
+          </Field>
+
+          <FieldGroup className="flex flex-col items-start gap-2">
+            <div className="flex w-full flex-row items-center gap-2">
               <Field>
-                <FieldLabel htmlFor="account">Account</FieldLabel>
-                <Select name="account_id">
+                <FieldLabel htmlFor="account">
+                  {data.transaction_type_id === 3 ? (
+                    <span className="flex items-center gap-1">
+                      From Account <ArrowRightIcon weight="fill" />
+                    </span>
+                  ) : (
+                    'Account'
+                  )}
+                </FieldLabel>
+                <Select
+                  value={data.account_id}
+                  onValueChange={(val) => setData('account_id', val)}
+                >
                   <SelectTrigger id="account" className="min-h-11">
-                    <SelectValue
-                      defaultValue={defaultValue?.account_id}
-                      placeholder="Select account"
-                    />
+                    <SelectValue placeholder="Select account" />
                   </SelectTrigger>
                   <SelectContent>
-                    {accounts.map((account) => (
-                      <SelectItem
-                        key={account.id}
-                        value={account.id.toString()}
-                      >
-                        {account.name}
+                    {accounts.map((acc) => (
+                      <SelectItem key={acc.id} value={acc.id.toString()}>
+                        {acc.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </Field>
-              <Field>
-                <FieldLabel htmlFor="amount">Amount</FieldLabel>
-                <Input
-                  id="amount"
-                  name="amount"
-                  type="number"
-                  step="0.01"
-                  min={0.0}
-                  defaultValue={defaultValue?.amount}
-                  className="min-h-11"
-                  placeholder="$0.00"
-                />
-                <FieldError>{errors.amount}</FieldError>
-              </Field>
 
               <Field>
-                <FieldLabel>Type</FieldLabel>
-                <RadioGroup
-                  name="transaction_type_id"
-                  defaultValue={defaultValue ? defaultValue.id.toString() : '1'}
-                  onValueChange={(value) =>
-                    handleTransactionTypeChange(Number(value))
-                  }
-                  className="flex items-center justify-start"
+                <FieldLabel>Balance</FieldLabel>
+                <Label
+                  className={cn(
+                    'flex min-h-11 items-center rounded-md border px-2 text-muted-foreground',
+                    account?.balance && account.balance < 0 && 'text-red-400',
+                  )}
                 >
-                  {transactionTypes.map((type, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value={type.id.toString()}
-                        id={'type' + index}
-                      />
-                      <Label htmlFor={'type' + index}>{type.name}</Label>
-                    </div>
-                  ))}
-                </RadioGroup>
+                  {account?.balance ? currencyFormat(account.balance) : '$0.00'}
+                </Label>
               </Field>
+            </div>
+            <FieldError>{errors.account_id}</FieldError>
+          </FieldGroup>
 
+          {/* To Account (Transfer only) */}
+          {data.transaction_type_id === 3 && (
+            <Field>
+              <FieldLabel htmlFor="to_account">
+                To Account <ArrowLeftIcon weight="fill" size={16} />
+              </FieldLabel>
+              <Select
+                value={data.to_account}
+                onValueChange={(val) => setData('to_account', val)}
+              >
+                <SelectTrigger id="to_account" className="min-h-11">
+                  <SelectValue placeholder="Select destination account" />
+                </SelectTrigger>
+                <SelectContent>
+                  {accounts.map((acc) => (
+                    <SelectItem key={acc.id} value={acc.id.toString()}>
+                      {acc.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FieldError>{errors.to_account}</FieldError>
+            </Field>
+          )}
+
+          <Field>
+            <FieldLabel htmlFor="amount">Amount</FieldLabel>
+            <Input
+              id="amount"
+              type="number"
+              step="0.01"
+              value={data.amount}
+              onChange={(e) => setData('amount', e.target.value)}
+              className="min-h-11"
+              placeholder="$0.00"
+              required
+            />
+            <FieldError>{errors.amount}</FieldError>
+          </Field>
+
+          {data.transaction_type_id !== 3 && (
+            <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="categories">Category</FieldLabel>
                 <Select
-                  name="category_id"
-                  onValueChange={(value) => handleCategoryChange(Number(value))}
+                  value={data.category_id}
+                  onValueChange={(val) =>
+                    setData((prev) => ({
+                      ...prev,
+                      category_id: val,
+                      supplier_id: '',
+                    }))
+                  }
                   disabled={filteredCategories.length === 0}
                 >
                   <SelectTrigger id="categories" className="min-h-11">
-                    <SelectValue
-                      defaultValue={defaultValue?.category_id}
-                      placeholder="Select a Category"
-                    />
+                    <SelectValue placeholder="Select a Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {filteredCategories.map((category) => (
-                      <SelectItem
-                        key={category.id}
-                        value={category.id.toString()}
-                      >
-                        {category.name}
+                    {filteredCategories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id.toString()}>
+                        {cat.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                <FieldError>{errors.category_id}</FieldError>
               </Field>
 
               <Field>
                 <FieldLabel htmlFor="supplier">Supplier</FieldLabel>
                 <Select
-                  name="supplier_id"
+                  value={data.supplier_id}
+                  onValueChange={(val) => setData('supplier_id', val)}
                   disabled={supplierWithCategory.length === 0}
                 >
                   <SelectTrigger id="supplier" className="min-h-11">
-                    <SelectValue
-                      defaultValue={defaultValue?.supplier_id}
-                      placeholder="Select a supplier"
-                    />
+                    <SelectValue placeholder="Select the supplier" />
                   </SelectTrigger>
                   <SelectContent>
-                    {supplierWithCategory.map((supplier, index) => (
-                      <SelectItem
-                        key={index + supplier.name + supplier.id}
-                        value={supplier.id.toString()}
-                      >
-                        {supplier.name}
+                    {supplierWithCategory.map((sup) => (
+                      <SelectItem key={sup.id} value={sup.id.toString()}>
+                        {sup.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                <FieldError>{errors.supplier_id}</FieldError>
               </Field>
-
-              <Field>
-                <FieldLabel htmlFor="date">Transaction Date</FieldLabel>
-                <CalendarField
-                  name="transaction_date"
-                  defaultValue={defaultValue?.transaction_date}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="note">Note</FieldLabel>
-                <Textarea id="note" placeholder="Optional note" />
-              </Field>
-
-              <DialogFooter className="flex flex-col flex-wrap">
-                {
-                  <Button
-                    type="submit"
-                    size="xl"
-                    disabled={processing}
-                    className="w-full"
-                  >
-                    {processing && <Spinner />}
-                    {submitLabel}
-                  </Button>
-                }
-                <DialogClose asChild>
-                  <Button
-                    variant="secondary"
-                    size="xl"
-                    onClick={() => resetAndClearErrors()}
-                    className="w-full"
-                  >
-                    Cancel
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </FieldSet>
+            </FieldGroup>
           )}
-        </Form>
-      </DialogContent>
-    </Dialog>
+
+          <Field>
+            <FieldLabel htmlFor="date">Transaction Date</FieldLabel>
+            <input
+              id="date"
+              type="date"
+              value={data.transaction_date.toString()}
+              onChange={(e) => setData('transaction_date', e.target.value)}
+              className="min-h-11 rounded-md border border-input bg-background px-2"
+            />
+            <FieldError>{errors.transaction_date}</FieldError>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="note">Note</FieldLabel>
+            <Textarea
+              id="note"
+              value={data.notes}
+              onChange={(e) => setData('notes', e.target.value)}
+              placeholder="Optional note"
+            />
+            <FieldError>{errors.notes}</FieldError>
+          </Field>
+
+          <div className="flex flex-col gap-2">
+            <Button
+              type="submit"
+              size="xl"
+              disabled={processing}
+              className="w-full"
+            >
+              {processing && <Spinner />}
+              {mode === 'edit' ? 'Save changes' : 'Add New Transaction'}
+            </Button>
+
+            <Link href={index().url}>
+              <Button
+                variant="secondary"
+                size="xl"
+                type="button"
+                onClick={() => {
+                  resetAndClearErrors();
+                }}
+                className="w-full"
+              >
+                Cancel
+              </Button>
+            </Link>
+          </div>
+        </FieldSet>
+      </FieldGroup>
+    </form>
   );
 }

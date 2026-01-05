@@ -99,7 +99,6 @@ class TransactionController extends Controller
   public function store(StoreTransactionsRequest $request)
   {
     Gate::authorize('create', Transaction::class);
-
     try {
 
       DB::transaction(function () use ($request) {
@@ -169,17 +168,79 @@ class TransactionController extends Controller
   /**
    * Show the form for editing the specified resource.
    */
-  public function edit(Transaction $transactions)
+  public function edit(Transaction $transaction)
   {
-    //
+    Gate::authorize('update', $transaction);
+
+    $user = request()->user();
+
+    $transactionTypes = TransactionType::select(['id', 'name'])->get();
+
+    $categories = fn() => Category::where(function ($query) use ($user) {
+      $query->where('user_id', $user->id)
+        ->orWhereNull('user_id');
+    })->where('is_active', true)
+      ->select(['id', 'name', 'transaction_type_id'])->get();
+
+    $suppliers = Supplier::whereHas('category', function ($query) use ($user) {
+      $query->where(function ($q) use ($user) {
+        $q->where('user_id', $user->id)
+          ->orWhereNull('user_id');
+      });
+    })->select(['id', 'name', 'category_id'])->get();
+
+    $accounts = Account::where('user_id', $user->id)
+      ->where('is_active', true)
+      ->select(['id', 'name', 'balance'])->get();
+
+    return Inertia::render('transactions/edit', [
+      'transaction' => $transaction,
+      'transactionTypes' => $transactionTypes,
+      'categories' => $categories,
+      'suppliers' => $suppliers,
+      'accounts' => $accounts,
+    ]);
+
   }
 
   /**
    * Update the specified resource in storage.
    */
-  public function update(UpdateTransactionsRequest $request, Transaction $transactions)
+  public function update(UpdateTransactionsRequest $request, Transaction $transaction)
   {
-    //
+
+    Gate::authorize('update', $transaction);
+
+    try {
+      $validated = $request->validated();
+
+      DB::transaction(function () use ($validated, $transaction) {
+
+        $oldAmount = $transaction->amount;
+        $oldTransactionTypeId = $transaction->transaction_type_id;
+        $oldAccountId = $transaction->account_id;
+
+        $account = Account::find($oldAccountId);
+        if ($oldTransactionTypeId == 1) {
+          $account->increment('balance', $oldAmount);
+        } elseif ($oldTransactionTypeId == 2) {
+          $account->decrement('balance', $oldAmount);
+        }
+
+        $transaction->update($validated);
+
+        $account->refresh();
+        $newAccount = Account::find($validated['account_id']);
+        $newAccount->adjustBalance($validated['amount'], $validated['transaction_type_id']);
+
+      });
+      return to_route('transactions.index')->with('success', 'Transaction has been updated.');
+
+    } catch (Throwable $e) {
+      Log::error("Error updating transaction: " . $e->getMessage());
+      return back()->withInput()->with('error', 'An error occurred while updating the transaction.');
+    }
+
   }
 
   /**
