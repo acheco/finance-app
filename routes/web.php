@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,7 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     return Inertia::render('dashboard');
   })->name('dashboard');
 
-  Route::resource('transactions', TransactionController::class);
+  Route::resource('transactions', TransactionController::class)->except(['show']);
+  Route::resource('budgets', BudgetController::class);
 
 });
 
