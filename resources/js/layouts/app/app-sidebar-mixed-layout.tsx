@@ -4,6 +4,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { MobileNav } from '@/components/mobile-nav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { dashboard } from '@/routes';
+import { index as budgets } from '@/routes/budgets';
 import { index as transactions } from '@/routes/transactions';
 import { NavItem } from '@/types';
 import {
@@ -28,8 +29,8 @@ const NavItems: NavItem[] = [
     icon: ArrowsDownUpIcon,
   },
   {
-    title: 'Budgets',
-    href: '#',
+    title: 'budgets',
+    href: budgets(),
     icon: ChartDonutIcon,
   },
   {
