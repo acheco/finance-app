@@ -220,6 +220,28 @@ export interface Transaction {
   };
 }
 
+export interface Budget {
+  id: number;
+  category_id: number;
+  category: string;
+  currency_id: number;
+  currency: string;
+  name: string;
+  budget_amount: number;
+  spent_amount: number;
+  period_type: 'weekly' | 'monthly' | 'yearly';
+  start_date: Date | string;
+  end_date: Date | string;
+  color: string;
+  recent_transactions: {
+    id: number;
+    amount: number;
+    transaction_date: string;
+    supplier: string;
+    icon: string;
+  }[];
+}
+
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;
 export type PaginatedSuppliers = PaginatedData<Supplier>;

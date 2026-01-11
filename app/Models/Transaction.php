@@ -22,6 +22,10 @@ class Transaction extends Model
     'notes',
   ];
 
+  protected $casts = [
+    'transaction_date' => 'date',
+  ];
+
   public function user(): BelongsTo
   {
     return $this->belongsTo(User::class);
@@ -46,5 +50,5 @@ class Transaction extends Model
   {
     return $this->belongsTo(Supplier::class);
   }
-  
+
 }

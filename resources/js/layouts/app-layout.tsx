@@ -8,6 +8,9 @@ interface AppLayoutProps {
   title: string;
   withReturnButton?: boolean;
   backUrl?: string;
+  withCreateButton?: boolean;
+  createButtonLabel?: string;
+  createButtonHref?: string;
 }
 
 export default ({
@@ -15,12 +18,18 @@ export default ({
   title,
   withReturnButton,
   backUrl,
+  withCreateButton,
+  createButtonLabel,
+  createButtonHref,
   ...props
 }: AppLayoutProps) => (
   <AppLayoutTemplate
     title={title}
     withReturnButton={withReturnButton}
     backUrl={backUrl}
+    withCreateButton={withCreateButton}
+    createButtonLabel={createButtonLabel}
+    createButtonHref={createButtonHref}
     {...props}
   >
     {children}

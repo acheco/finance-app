@@ -21,6 +21,14 @@ class Budget extends Model
     'is_active',
   ];
 
+  protected $casts = [
+    'is_active' => 'boolean',
+    'start_date' => 'date',
+    'end_date' => 'date',
+    'budget_amount' => 'decimal:2',
+    'spent_amount' => 'decimal:2',
+  ];
+
   public function category(): BelongsTo
   {
     return $this->belongsTo(Category::class);

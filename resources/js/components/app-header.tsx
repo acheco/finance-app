@@ -15,11 +15,17 @@ interface AppHeaderProps {
   title: string;
   withReturnButton?: boolean;
   backUrl?: string;
+  withCreateButton?: boolean;
+  createButtonLabel?: string;
+  createButtonHref?: string;
 }
 export function AppHeader({
   title,
   withReturnButton = false,
   backUrl,
+  withCreateButton = false,
+  createButtonLabel = 'Add New',
+  createButtonHref = '#',
 }: AppHeaderProps) {
   const page = usePage<SharedData>();
   const { auth } = page.props;
@@ -37,23 +43,32 @@ export function AppHeader({
           )}
           {title}
         </h1>
-        <div className="ml-auto flex items-center space-x-2 lg:hidden">
+        <div className="ml-auto flex items-center space-x-2">
           <div className="relative flex items-center space-x-1"></div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="size-10 rounded-full p-1">
-                <Avatar className="size-8 overflow-hidden rounded-full">
-                  <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
-                  <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                    {getInitials(auth.user.name)}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end">
-              <UserMenuContent user={auth.user} />
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {withCreateButton && (
+            <div className="ml-auto">
+              <Link href={createButtonHref} viewTransition>
+                <Button>{createButtonLabel}</Button>
+              </Link>
+            </div>
+          )}
+          <div className="lg:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="size-10 rounded-full p-1">
+                  <Avatar className="size-8 overflow-hidden rounded-full">
+                    <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
+                    <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                      {getInitials(auth.user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end">
+                <UserMenuContent user={auth.user} />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </div>

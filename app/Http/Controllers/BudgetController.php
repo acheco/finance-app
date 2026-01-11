@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBudgetRequest;
 use App\Http\Requests\UpdateBudgetRequest;
+use App\Http\Resources\BudgetResource;
 use App\Models\Budget;
 use Inertia\Inertia;
 
@@ -14,7 +15,21 @@ class BudgetController extends Controller
    */
   public function index()
   {
-    return Inertia::render('budgets/index');
+    $budgets = Budget::query()
+      ->where('user_id', auth()->id())
+      ->with([
+        'currency', 'category.transactions' => function ($query) {
+          $query->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->limit(3);
+        }
+      ])
+      ->orderBy('created_at', 'desc')
+      ->get();
+
+    return Inertia::render('budgets/index', [
+      'budgets' => BudgetResource::collection($budgets)->resolve(),
+    ]);
   }
 
   /**

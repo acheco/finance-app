@@ -55,6 +55,9 @@ interface AppSidebarProps {
   children: React.ReactNode;
   withReturnButton?: boolean;
   backUrl?: string;
+  withCreateButton?: boolean;
+  createButtonLabel?: string;
+  createButtonHref?: string;
 }
 
 export default function AppSidebarLayout({
@@ -62,6 +65,9 @@ export default function AppSidebarLayout({
   title,
   withReturnButton,
   backUrl,
+  withCreateButton,
+  createButtonLabel,
+  createButtonHref,
 }: AppSidebarProps) {
   const isMobile = useIsMobile();
 
@@ -73,6 +79,9 @@ export default function AppSidebarLayout({
             title={title}
             withReturnButton={withReturnButton}
             backUrl={backUrl}
+            withCreateButton={withCreateButton}
+            createButtonLabel={createButtonLabel}
+            createButtonHref={createButtonHref}
           />
           {children}
           <MobileNav NavItems={NavItems} />
@@ -88,6 +97,9 @@ export default function AppSidebarLayout({
               title={title}
               withReturnButton={withReturnButton}
               backUrl={backUrl}
+              withCreateButton={withCreateButton}
+              createButtonLabel={createButtonLabel}
+              createButtonHref={createButtonHref}
             />
             {children}
           </main>
