@@ -96,8 +96,8 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
                         {transaction.icon && (
                           <Icon
                             name={transaction.icon}
-                            weight="duotone"
-                            size={16}
+                            color="white"
+                            size={18}
                           />
                         )}
                       </div>

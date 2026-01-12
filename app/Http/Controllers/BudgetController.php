@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BudgetPeriod;
 use App\Http\Requests\StoreBudgetRequest;
 use App\Http\Requests\UpdateBudgetRequest;
 use App\Http\Resources\BudgetResource;
 use App\Models\Budget;
+use App\Models\Category;
 use Inertia\Inertia;
 
 class BudgetController extends Controller
@@ -27,8 +29,21 @@ class BudgetController extends Controller
       ->orderBy('created_at', 'desc')
       ->get();
 
+    $categories = Category::where('user_id', auth()->id())
+      ->orWhereNull('user_id')
+      ->where('transaction_type_id', 1)
+      ->select(['id', 'name', 'icon', 'color'])
+      ->get();
+
+    $budgetPeriod = collect(BudgetPeriod::cases())->map(fn($period) => [
+      'value' => $period->value,
+      'label' => $period->label()
+    ]);
+
     return Inertia::render('budgets/index', [
       'budgets' => BudgetResource::collection($budgets)->resolve(),
+      'categories' => $categories,
+      'budgetPeriod' => $budgetPeriod
     ]);
   }
 

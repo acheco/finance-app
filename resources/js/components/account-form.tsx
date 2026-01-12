@@ -85,7 +85,6 @@ export default function AccountForm({
           onSuccess={() => {
             setOpen(false);
           }}
-          onError={(errors) => console.log(errors)}
           className="space-y-6"
         >
           {({ processing, errors, resetAndClearErrors }) => (

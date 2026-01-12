@@ -242,6 +242,30 @@ export interface Budget {
   }[];
 }
 
+export interface BudgetFormProps {
+  mode: 'edit' | 'create';
+  defaultValues?: {
+    id?: number;
+    category_id: number;
+    category_name: string;
+    currency_id: number;
+    budget_amount: number;
+    period_type: 'monthly' | 'yearly' | 'custom';
+    start_date: Date | string;
+    end_date: Date | string;
+  };
+  categories: {
+    id: number;
+    name: string;
+    icon: string;
+    color: string;
+  };
+  budgetPeriod: {
+    value: string;
+    label: string;
+  };
+}
+
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;
 export type PaginatedSuppliers = PaginatedData<Supplier>;
