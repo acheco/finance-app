@@ -92,7 +92,7 @@ export default function AppSidebarLayout({
             NavItems={NavItems}
             className="row-span-full overflow-y-hidden"
           />
-          <main className="max-w-7xl overflow-y-auto">
+          <main className="overflow-y-auto">
             <AppHeader
               title={title}
               withReturnButton={withReturnButton}

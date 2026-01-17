@@ -1,12 +1,22 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { UserMenuContent } from '@/components/user-menu-content';
+import { useInitials } from '@/hooks/use-initials';
 import { cn, resolveUrl } from '@/lib/utils';
 import type { NavItem, SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 
 export function MobileNav({ NavItems }: { NavItems: NavItem[] }) {
   const page = usePage<SharedData>();
-
+  const { auth } = page.props;
+  const getInitials = useInitials();
   return (
-    <nav className="fixed right-0 bottom-0 left-0 flex items-end justify-between bg-grey-900 px-4">
+    <nav className="fixed right-0 bottom-0 left-0 flex items-center justify-between bg-grey-900 px-4">
       {NavItems.map((item: NavItem, index: number) => {
         return (
           <div
@@ -54,6 +64,23 @@ export function MobileNav({ NavItems }: { NavItems: NavItem[] }) {
           </div>
         );
       })}
+      <div className="">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="size-10 rounded-full p-1">
+              <Avatar className="size-8 overflow-hidden rounded-full">
+                <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
+                <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                  {getInitials(auth.user.name)}
+                </AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end">
+            <UserMenuContent user={auth.user} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </nav>
   );
 }

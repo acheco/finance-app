@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\BudgetPeriod;
 use App\Http\Requests\StoreBudgetRequest;
 use App\Http\Requests\UpdateBudgetRequest;
+use App\Http\Resources\BudgetChartDataResource;
 use App\Http\Resources\BudgetResource;
 use App\Models\Budget;
 use App\Models\Category;
@@ -43,7 +44,8 @@ class BudgetController extends Controller
     return Inertia::render('budgets/index', [
       'budgets' => BudgetResource::collection($budgets)->resolve(),
       'categories' => $categories,
-      'budgetPeriod' => $budgetPeriod
+      'budgetPeriod' => $budgetPeriod,
+      'budgetChartData' => BudgetChartDataResource::collection($budgets)->resolve()
     ]);
   }
 

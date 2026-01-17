@@ -14,7 +14,6 @@ class BudgetResource extends JsonResource
    */
   public function toArray(Request $request): array
   {
-    // Accedemos a las transacciones de la categoría de forma segura
     $recentTransactions = $this->category && $this->category->relationLoaded('transactions')
       ? $this->category->transactions
       : collect();
@@ -23,7 +22,7 @@ class BudgetResource extends JsonResource
       'id' => $this->id,
       'name' => $this->name,
       'category' => $this->category?->name,
-      'color' => $this->category?->color, // Asegúrate que 'color' existe en la tabla categories
+      'color' => $this->category?->color,
       'currency' => $this->currency?->name,
       'budget_amount' => (float) $this->budget_amount,
       'spent_amount' => (float) $this->spent_amount,

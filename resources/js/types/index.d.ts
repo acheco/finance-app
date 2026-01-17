@@ -266,6 +266,14 @@ export interface BudgetFormProps {
   };
 }
 
+export type BudgetChartData = {
+  id: number;
+  name: string;
+  color: string;
+  budget_amount: number;
+  spent_amount: number;
+};
+
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;
 export type PaginatedSuppliers = PaginatedData<Supplier>;

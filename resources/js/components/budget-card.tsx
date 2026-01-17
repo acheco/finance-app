@@ -4,7 +4,7 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/componen
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
+import { cn, currencyFormat } from '@/lib/utils';
 import { Budget } from '@/types';
 import { Link } from '@inertiajs/react';
 import { ArrowsDownUpIcon, CaretRightIcon, DotsThreeIcon } from '@phosphor-icons/react';
@@ -16,11 +16,13 @@ interface BudgetCardProps {
 export default function BudgetCard({ budget }: BudgetCardProps) {
   const budgetAmount = Math.ceil(budget.budget_amount);
   const spentAmount = Math.ceil(budget.spent_amount);
+  const formattedSpentAmount = currencyFormat(budget.spent_amount);
   const remainingAmount = budget.budget_amount - budget.spent_amount;
+  const formattedRemainingAmount = currencyFormat(remainingAmount);
   const color = budget.color;
 
   return (
-    <Card className="w-[343px] gap-3">
+    <Card className="gap-3">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-xl">
           <div
@@ -46,7 +48,7 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
               max={budgetAmount}
               progressColor={color}
               className={cn(
-                `] h-[24px] w-full rounded-sm bg-beige-100 [&>div]:rounded-sm`,
+                `h-[24px] w-full rounded-sm bg-beige-100 [&>div]:rounded-sm`,
               )}
             />
           </div>
@@ -59,7 +61,7 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
             />
             <div className="space-y-1">
               <p className="text-xs">Spent</p>
-              <p className="font-bold text-black">${budget.spent_amount}</p>
+              <p className="font-bold text-black">{formattedSpentAmount}</p>
             </div>
           </div>
           <div className={'flex items-center gap-4'}>
@@ -67,7 +69,7 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
             <div className="space-y-1">
               <p className="text-xs">Remaining</p>
               <p className="text-sm font-bold text-black">
-                ${remainingAmount.toFixed(2)}
+                {formattedRemainingAmount}
               </p>
             </div>
           </div>

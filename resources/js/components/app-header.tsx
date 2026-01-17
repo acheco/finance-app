@@ -31,8 +31,8 @@ export function AppHeader({
   const { auth } = page.props;
   const getInitials = useInitials();
   return (
-    <div className="my-auto p-4">
-      <div className="flex h-16 items-center md:max-w-7xl lg:m-0 lg:px-0">
+    <div className="my-auto max-w-7xl px-4 py-4 md:px-9 lg:pl-0">
+      <div className="flex h-16 items-center md:max-w-7xl lg:m-0">
         <h1 className="flex items-center gap-4 stroke-0 text-[32px] leading-[120%] font-bold text-grey-900">
           {withReturnButton && (
             <Link replace href={backUrl ?? '#'} viewTransition>
@@ -48,11 +48,13 @@ export function AppHeader({
           {withCreateButton && (
             <div className="ml-auto">
               <Link href={createButtonHref} viewTransition>
-                <Button>{createButtonLabel}</Button>
+                <Button size="xl" className="font-bold">
+                  {createButtonLabel}
+                </Button>
               </Link>
             </div>
           )}
-          <div className="lg:hidden">
+          <div className="hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="size-10 rounded-full p-1">

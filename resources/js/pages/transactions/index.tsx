@@ -63,7 +63,7 @@ export default function Transactions({
       <Head title="Transactions" />
 
       {transactions.data.length === 0 ? (
-        <section className="p-4">
+        <section className="max-w-7xl p-4">
           <Empty className="bg-white">
             <EmptyHeader>
               <ArrowsDownUpIcon weight="fill" size={24} />
@@ -81,7 +81,7 @@ export default function Transactions({
           </Empty>
         </section>
       ) : (
-        <section className="m-4 rounded-md bg-white shadow-sm">
+        <section className="m-4 max-w-7xl rounded-md bg-white shadow-sm">
           <div className="flex w-full items-center justify-between gap-4 px-5 py-6">
             <TransactionFilters
               filters={filters}
