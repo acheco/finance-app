@@ -231,13 +231,13 @@ export interface Budget {
   start_date: Date | string;
   end_date: Date | string;
   currency: {
-    id: number;
+    id: string;
     name: string;
     code: string;
     symbol: string;
   };
   category: {
-    id: number;
+    id: string;
     name: string;
     icon: string;
     color: string;
@@ -258,16 +258,7 @@ export interface Budget {
 
 export interface BudgetFormProps {
   mode: 'edit' | 'create';
-  defaultValues?: {
-    id?: string;
-    category_id: string;
-    category_name: string;
-    currency_id: string;
-    budget_amount: number;
-    period_type: 'monthly' | 'yearly' | 'custom';
-    start_date: Date | string;
-    end_date: Date | string;
-  };
+  defaultValues: Budget;
   categories: {
     id: string;
     name: string;

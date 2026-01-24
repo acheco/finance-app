@@ -135,7 +135,7 @@ class Budget extends Model
     $this->spent_amount = Transaction::where('user_id', $this->user_id)
       ->where('category_id', $this->category_id)
       ->whereHas('transactionType', function ($query) {
-        $query->where('name', 'expense');
+        $query->where('id', 1); // Expense
       })
       ->whereBetween('transaction_date', [
         $period['start']->format('Y-m-d'),

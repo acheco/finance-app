@@ -47,7 +47,13 @@ export default function Budgets({
           </div>
           <div className="space-y-4">
             {budgets.map((budget) => (
-              <BudgetCard key={budget.id} budget={budget} />
+              <BudgetCard
+                key={budget.id}
+                budget={budget}
+                categories={categories}
+                currencies={currencies}
+                budgetPeriod={budgetPeriod}
+              />
             ))}
           </div>
         </div>

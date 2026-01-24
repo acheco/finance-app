@@ -22,7 +22,13 @@ class UpdateBudgetRequest extends FormRequest
   public function rules(): array
   {
     return [
-      //
+      'category_id' => 'required|exists:categories,id',
+      'name' => 'nullable|string|max:100',
+      'budget_amount' => 'required|numeric|min:0.1',
+      'currency_id' => 'required|exists:currencies,id',
+      'period_type' => 'required|in:monthly,yearly,custom',
+      'start_date' => 'required|date|before:end_date',
+      'end_date' => 'required|date|after:start_date',
     ];
   }
 }

@@ -1,3 +1,5 @@
+import BudgetForm from '@/components/budget-form';
+import DeleteBudgetForm from '@/components/delete-budget-form';
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,6 +10,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   Empty,
   EmptyContent,
   EmptyDescription,
@@ -16,10 +24,11 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { cn, currencyFormat } from '@/lib/utils';
 import transactions from '@/routes/transactions';
-import { Budget } from '@/types';
+import { Budget, BudgetFormProps } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
   ArrowsDownUpIcon,
@@ -29,16 +38,23 @@ import {
 
 interface BudgetCardProps {
   budget: Budget;
+  categories: BudgetFormProps['categories'][];
+  currencies: BudgetFormProps['currencies'][];
+  budgetPeriod: BudgetFormProps['budgetPeriod'][];
 }
 
-export default function BudgetCard({ budget }: BudgetCardProps) {
+export default function BudgetCard({
+  budget,
+  budgetPeriod,
+  currencies,
+  categories,
+}: BudgetCardProps) {
   const budgetAmount = Math.ceil(budget.budget_amount);
   const spentAmount = Math.ceil(budget.spent_amount);
   const formattedSpentAmount = currencyFormat(budget.spent_amount);
   const remainingAmount = budget.budget_amount - budget.spent_amount;
   const formattedRemainingAmount = currencyFormat(remainingAmount);
   const color = budget.category.color;
-
   return (
     <Card className="gap-3">
       <CardHeader>
@@ -50,9 +66,28 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
           {budget.category.name}
         </CardTitle>
         <CardAction>
-          <Button variant="ghost" className="flex items-center">
-            <DotsThreeIcon color="text-grey-300" height={16} width={16} />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="flex items-center">
+                <DotsThreeIcon color="text-grey-300" height={16} width={16} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem asChild>
+                <BudgetForm
+                  mode="edit"
+                  categories={categories}
+                  currencies={currencies}
+                  budgetPeriod={budgetPeriod}
+                  defaultValues={budget}
+                />
+              </DropdownMenuItem>
+              <Separator className="my-1" />
+              <DropdownMenuItem asChild>
+                <DeleteBudgetForm budget={budget} />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </CardAction>
       </CardHeader>
       <CardContent>

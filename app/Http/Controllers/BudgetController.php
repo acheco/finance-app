@@ -115,7 +115,23 @@ class BudgetController extends Controller
    */
   public function update(UpdateBudgetRequest $request, Budget $budget)
   {
-    //
+    Gate::authorize('update', $budget);
+
+    try {
+      $validated = $request->validated();
+
+      DB::transaction(function () use ($validated, $budget) {
+        $budget->update($validated);
+        $budget->recalculateSpentAmount()->save();
+      });
+
+      return redirect()->back()->with('success', 'Budget has been updated.');
+
+    } catch (Throwable $e) {
+      Log::error('Error updating budget: ' . $e->getMessage());
+      return back()->withInput()->with('error', 'An error occurred while updating the budget.');
+    }
+
   }
 
   /**
@@ -123,6 +139,11 @@ class BudgetController extends Controller
    */
   public function destroy(Budget $budget)
   {
-    //
+    Gate::authorize('delete', $budget);
+
+    $budget->delete();
+
+    return redirect()->back()->with('success', 'Budget has been deleted.');
+
   }
 }

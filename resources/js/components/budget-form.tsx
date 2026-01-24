@@ -28,7 +28,6 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { BudgetFormProps } from '@/types';
 import { Form } from '@inertiajs/react';
-import { PencilSimpleLineIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 
 interface Props {
@@ -111,15 +110,14 @@ export default function BudgetForm({
 
   const formProps =
     mode === 'edit' && defaultValues?.id
-      ? BudgetController.update.form(Number(defaultValues.id))
+      ? BudgetController.update.form(defaultValues.id)
       : BudgetController.store.form();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {mode === 'edit' ? (
-          <Button variant="ghost" size="icon-sm">
-            <PencilSimpleLineIcon weight="fill" color="#826CB0" />
+          <Button variant="ghost" className="w-full justify-start">
             Edit Budget
           </Button>
         ) : (
@@ -129,7 +127,7 @@ export default function BudgetForm({
       <DialogContent>
         <DialogTitle className="text-xl">
           {mode === 'edit'
-            ? `Editing ${defaultValues?.category_name}`
+            ? `Editing ${defaultValues?.category?.name}`
             : 'Add New Budget'}
         </DialogTitle>
         <DialogDescription>
@@ -147,17 +145,14 @@ export default function BudgetForm({
                 <FieldLabel htmlFor="category">Budget Category</FieldLabel>
                 <Select
                   name="category_id"
-                  defaultValue={defaultValues?.category_id.toString()}
+                  defaultValue={defaultValues?.category.id}
                 >
                   <SelectTrigger className="h-11 w-[180px]">
                     <SelectValue placeholder="Choose the Category" />
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
-                      <SelectItem
-                        key={category.id}
-                        value={category.id.toString()}
-                      >
+                      <SelectItem key={category.id} value={category.id}>
                         <div
                           className="rounded-full p-1.5"
                           style={{ backgroundColor: category.color }}
@@ -194,17 +189,14 @@ export default function BudgetForm({
                   <FieldLabel htmlFor="currency_id">Currency</FieldLabel>
                   <Select
                     name="currency_id"
-                    defaultValue={defaultValues?.currency_id.toString()}
+                    defaultValue={defaultValues?.currency.id}
                   >
                     <SelectTrigger className="h-11">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                     <SelectContent>
                       {currencies?.map((currency) => (
-                        <SelectItem
-                          key={currency.id}
-                          value={currency.id.toString()}
-                        >
+                        <SelectItem key={currency.id} value={currency.id}>
                           {currency.code} {currency.symbol}
                         </SelectItem>
                       ))}

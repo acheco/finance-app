@@ -8,22 +8,6 @@ use App\Models\User;
 class BudgetPolicy
 {
   /**
-   * Determine whether the user can view any models.
-   */
-  public function viewAny(User $user): bool
-  {
-    return false;
-  }
-
-  /**
-   * Determine whether the user can view the model.
-   */
-  public function view(User $user, Budget $budget): bool
-  {
-    return false;
-  }
-
-  /**
    * Determine whether the user can create models.
    */
   public function create(User $user): bool
@@ -36,7 +20,7 @@ class BudgetPolicy
    */
   public function update(User $user, Budget $budget): bool
   {
-    return $user->id === $budget->user_id;
+    return $user->is($budget->user);
   }
 
   /**
@@ -44,22 +28,6 @@ class BudgetPolicy
    */
   public function delete(User $user, Budget $budget): bool
   {
-    return $user->id === $budget->user_id;
-  }
-
-  /**
-   * Determine whether the user can restore the model.
-   */
-  public function restore(User $user, Budget $budget): bool
-  {
-    return false;
-  }
-
-  /**
-   * Determine whether the user can permanently delete the model.
-   */
-  public function forceDelete(User $user, Budget $budget): bool
-  {
-    return false;
+    return $user->is($budget->user);
   }
 }
