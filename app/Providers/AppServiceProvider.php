@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Currency;
+use App\Models\Transaction;
+use App\Observers\TransactionObserver;
 use App\Policies\CurrencyPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -23,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
   public function boot(): void
   {
     Gate::policy(Currency::class, CurrencyPolicy::class);
+    Transaction::observe(TransactionObserver::class);
   }
 }

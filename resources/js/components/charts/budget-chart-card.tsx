@@ -14,44 +14,45 @@ import {
 } from '@/components/ui/empty';
 import { Separator } from '@/components/ui/separator';
 import { currencyFormat } from '@/lib/utils';
-import { BudgetChartData } from '@/types';
+import { Budget } from '@/types';
 import { ChartDonutIcon } from '@phosphor-icons/react';
 import * as React from 'react';
 import { Label, Pie, PieChart } from 'recharts';
 
-interface ChartPieDonutTextProps {
-  budgets: BudgetChartData[];
+interface BudgetChartCardProps {
+  budgets: Budget[];
 }
 
-export default function ChartPieDonutText({ budgets }: ChartPieDonutTextProps) {
+export default function BudgetChartCard({ budgets }: BudgetChartCardProps) {
   const totalBudgetAmount = React.useMemo(() => {
-    return budgets.reduce((acc, curr) => acc + curr.budget_amount, 0);
+    return budgets.reduce((acc, curr) => acc + Number(curr.budget_amount), 0);
   }, [budgets]);
 
   const totalSpentAmount = React.useMemo(() => {
-    return budgets.reduce((acc, curr) => acc + curr.spent_amount, 0);
+    return budgets.reduce((acc, curr) => acc + Number(curr.spent_amount), 0);
   }, [budgets]);
 
   const formattedBudgetAmount = currencyFormat(totalBudgetAmount);
 
   const chartData = React.useMemo(() => {
-    return budgets.map((item) => ({
-      ...item,
-      fill: item.color,
-    }));
+    return budgets
+      .filter((item) => Number(item.spent_amount) > 0)
+      .map((item) => ({
+        categoryName: item.category.name,
+        amount: Number(item.spent_amount),
+        fill: item.category.color,
+      }));
   }, [budgets]);
 
   const chartConfig = React.useMemo(() => {
     const config: ChartConfig = {
-      budget_amount: {
-        label: 'Amount',
-      },
+      amount: { label: 'Expense' },
     };
 
     budgets.forEach((budget) => {
-      config[budget.name] = {
-        label: budget.name,
-        color: budget.color,
+      config[budget.category.name] = {
+        label: budget.category.name,
+        color: budget.category.color,
       };
     });
 
@@ -64,26 +65,20 @@ export default function ChartPieDonutText({ budgets }: ChartPieDonutTextProps) {
         {totalSpentAmount > 0 ? (
           <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square"
+            className="mx-auto aspect-square max-h-[300px]"
           >
-            <PieChart
-              style={{
-                width: '100%',
-                maxWidth: '300px',
-                maxHeight: '80vh',
-                aspectRatio: 1,
-                margin: '0 auto',
-              }}
-            >
+            <PieChart>
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent hideLabel />}
+                content={
+                  <ChartTooltipContent nameKey="categoryName" indicator="dot" />
+                }
               />
               <Pie
                 key={budgets[0].id}
                 data={chartData}
-                dataKey="spent_amount"
-                nameKey="name"
+                dataKey="amount"
+                nameKey="categoryName"
                 innerRadius={'70%'}
                 outerRadius={'90%'}
                 strokeWidth={5}
@@ -107,7 +102,7 @@ export default function ChartPieDonutText({ budgets }: ChartPieDonutTextProps) {
                           </tspan>
                           <tspan
                             x={viewBox.cx}
-                            y={(viewBox.cy || 0) + 24}
+                            y={(viewBox.cy || 0) + 28}
                             className="fill-muted-foreground"
                           >
                             of {formattedBudgetAmount} limit
@@ -119,9 +114,10 @@ export default function ChartPieDonutText({ budgets }: ChartPieDonutTextProps) {
                 />
               </Pie>
               <Pie
-                key={budgets[0].name}
+                key={budgets[0].category.name}
                 data={chartData}
-                dataKey="spent_amount"
+                dataKey="amount"
+                nameKey="categoryName"
                 cx="50%"
                 cy="50%"
                 innerRadius="60%"
@@ -150,20 +146,19 @@ export default function ChartPieDonutText({ budgets }: ChartPieDonutTextProps) {
         <h2 className="text-left text-xl font-bold">Spending Summary</h2>
         <div className="w-full space-y-4">
           {budgets.map((budget, index) => (
-            <>
-              <div
-                key={budget.name}
-                className="flex items-center justify-between gap-2"
-              >
+            <div key={index}>
+              <div className="flex items-center justify-between gap-2">
                 <div
                   className="flex items-center gap-4"
                   data-testid="budget-name"
                 >
                   <span
                     className="h-[21px] w-1 rounded-full bg-current"
-                    style={{ backgroundColor: budget.color }}
+                    style={{ backgroundColor: budget.category.color }}
                   />
-                  <span className="text-sm text-grey-500">{budget.name}</span>
+                  <span className="text-sm text-grey-500">
+                    {budget.category.name}
+                  </span>
                 </div>
                 <div
                   className="flex items-center gap-2"
@@ -178,7 +173,7 @@ export default function ChartPieDonutText({ budgets }: ChartPieDonutTextProps) {
                 </div>
               </div>
               {index < budgets.length - 1 && <Separator />}
-            </>
+            </div>
           ))}
         </div>
       </CardFooter>

@@ -1,13 +1,31 @@
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { cn, currencyFormat } from '@/lib/utils';
+import transactions from '@/routes/transactions';
 import { Budget } from '@/types';
 import { Link } from '@inertiajs/react';
-import { ArrowsDownUpIcon, CaretRightIcon, DotsThreeIcon } from '@phosphor-icons/react';
+import {
+  ArrowsDownUpIcon,
+  CaretRightIcon,
+  DotsThreeIcon,
+} from '@phosphor-icons/react';
 
 interface BudgetCardProps {
   budget: Budget;
@@ -19,7 +37,7 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
   const formattedSpentAmount = currencyFormat(budget.spent_amount);
   const remainingAmount = budget.budget_amount - budget.spent_amount;
   const formattedRemainingAmount = currencyFormat(remainingAmount);
-  const color = budget.color;
+  const color = budget.category.color;
 
   return (
     <Card className="gap-3">
@@ -29,7 +47,7 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
             className="h-[16px] w-[16px] rounded-full"
             style={{ backgroundColor: color }}
           />
-          {budget.category}
+          {budget.category.name}
         </CardTitle>
         <CardAction>
           <Button variant="ghost" className="flex items-center">
@@ -88,33 +106,41 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
             </div>
             <Table>
               <TableBody>
-                {budget.recent_transactions.map((transaction) => (
-                  <TableRow key={transaction.id} className="h-[40px]">
-                    <TableCell className="flex items-center gap-2 px-0 text-xs font-bold">
-                      <div
-                        className="grid h-8 w-8 place-content-center rounded-full"
-                        style={{ backgroundColor: color }}
-                      >
-                        {transaction.icon && (
-                          <Icon
-                            name={transaction.icon}
-                            color="white"
-                            size={18}
-                          />
-                        )}
-                      </div>
-                      {transaction.supplier}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <p className="pb-1 text-xs font-bold">
-                        -${transaction.amount}
-                      </p>
-                      <p className="text-xs text-grey-500">
-                        {transaction.transaction_date}
-                      </p>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {budget.recent_transactions.map((transaction) => {
+                  return (
+                    <TableRow key={transaction.id} className="h-[40px]">
+                      <TableCell className="flex items-center gap-2 px-0 text-xs font-bold">
+                        <div
+                          className="grid h-8 w-8 place-content-center rounded-full"
+                          style={{ backgroundColor: color }}
+                        >
+                          {transaction.supplier.logo ? (
+                            <img
+                              src={transaction.supplier.logo}
+                              alt="Supplier Logo"
+                              className="rounded-full border-none"
+                            />
+                          ) : (
+                            <Icon
+                              name={budget.category.icon}
+                              color="white"
+                              size={18}
+                            />
+                          )}
+                        </div>
+                        {transaction?.supplier.name}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <p className="pb-1 text-xs font-bold">
+                          -${transaction.amount}
+                        </p>
+                        <p className="text-xs text-grey-500">
+                          {transaction.transaction_date.split('T')[0]}
+                        </p>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
@@ -130,7 +156,7 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <Link href={'#'}>
+              <Link href={transactions.create().url}>
                 <Button>Add Transaction</Button>
               </Link>
             </EmptyContent>

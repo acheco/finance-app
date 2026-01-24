@@ -7,14 +7,7 @@ import { dashboard } from '@/routes';
 import { index as budgets } from '@/routes/budgets';
 import { index as transactions } from '@/routes/transactions';
 import { NavItem } from '@/types';
-import {
-  ArrowsDownUpIcon,
-  ChartDonutIcon,
-  GearIcon,
-  HouseIcon,
-  ReceiptIcon,
-  TipJarIcon,
-} from '@phosphor-icons/react';
+import { ArrowsDownUpIcon, ChartDonutIcon, GearIcon, HouseIcon, ReceiptIcon, TipJarIcon } from '@phosphor-icons/react';
 import React from 'react';
 
 const NavItems: NavItem[] = [
@@ -55,9 +48,7 @@ interface AppSidebarProps {
   children: React.ReactNode;
   withReturnButton?: boolean;
   backUrl?: string;
-  withCreateButton?: boolean;
-  createButtonLabel?: string;
-  createButtonHref?: string;
+  headerChildren?: React.ReactNode;
 }
 
 export default function AppSidebarLayout({
@@ -65,9 +56,7 @@ export default function AppSidebarLayout({
   title,
   withReturnButton,
   backUrl,
-  withCreateButton,
-  createButtonLabel,
-  createButtonHref,
+  headerChildren,
 }: AppSidebarProps) {
   const isMobile = useIsMobile();
 
@@ -79,9 +68,7 @@ export default function AppSidebarLayout({
             title={title}
             withReturnButton={withReturnButton}
             backUrl={backUrl}
-            withCreateButton={withCreateButton}
-            createButtonLabel={createButtonLabel}
-            createButtonHref={createButtonHref}
+            headerChildren={headerChildren}
           />
           {children}
           <MobileNav NavItems={NavItems} />
@@ -97,9 +84,7 @@ export default function AppSidebarLayout({
               title={title}
               withReturnButton={withReturnButton}
               backUrl={backUrl}
-              withCreateButton={withCreateButton}
-              createButtonLabel={createButtonLabel}
-              createButtonHref={createButtonHref}
+              headerChildren={headerChildren}
             />
             {children}
           </main>

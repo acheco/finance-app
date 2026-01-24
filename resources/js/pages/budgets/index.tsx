@@ -10,35 +10,40 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import AppLayout from '@/layouts/app-layout';
-import { Budget, BudgetChartData, BudgetFormProps } from '@/types';
+import { Budget, BudgetFormProps } from '@/types';
 import { Head } from '@inertiajs/react';
 import { ChartDonutIcon } from '@phosphor-icons/react';
 
 interface BudgetsProps {
   budgets: Budget[];
   categories: BudgetFormProps['categories'][];
+  currencies: BudgetFormProps['currencies'][];
   budgetPeriod: BudgetFormProps['budgetPeriod'][];
-  budgetChartData: BudgetChartData[];
 }
 
 export default function Budgets({
   budgets,
   categories,
+  currencies,
   budgetPeriod,
-  budgetChartData,
 }: BudgetsProps) {
   return (
     <AppLayout
       title="Budgets"
-      withCreateButton={true}
-      createButtonLabel="+ Add New"
-      createButtonHref={'/budgets/create'}
+      headerChildren={
+        <BudgetForm
+          mode="create"
+          categories={categories}
+          currencies={currencies}
+          budgetPeriod={budgetPeriod}
+        />
+      }
     >
       <Head title="Budgets" />
       {budgets.length ? (
         <div className="grid max-w-7xl gap-6 px-4 sm:px-10 lg:grid-cols-[minmax(320px,428px)_1fr] lg:pl-0">
           <div className="">
-            <BudgetChartCard budgets={budgetChartData} />
+            <BudgetChartCard budgets={budgets} />
           </div>
           <div className="space-y-4">
             {budgets.map((budget) => (
@@ -62,6 +67,7 @@ export default function Budgets({
               mode="create"
               categories={categories}
               budgetPeriod={budgetPeriod}
+              currencies={currencies}
             />
           </EmptyContent>
         </Empty>

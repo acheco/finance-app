@@ -222,57 +222,69 @@ export interface Transaction {
 
 export interface Budget {
   id: number;
+  user_id: number;
   category_id: number;
-  category: string;
-  currency_id: number;
-  currency: string;
-  name: string;
+  currency_id: string;
   budget_amount: number;
   spent_amount: number;
-  period_type: 'weekly' | 'monthly' | 'yearly';
+  period_type: 'monthly' | 'yearly' | 'custom';
   start_date: Date | string;
   end_date: Date | string;
-  color: string;
+  currency: {
+    id: number;
+    name: string;
+    code: string;
+    symbol: string;
+  };
+  category: {
+    id: number;
+    name: string;
+    icon: string;
+    color: string;
+  };
   recent_transactions: {
     id: number;
     amount: number;
     transaction_date: string;
-    supplier: string;
-    icon: string;
+    supplier_id: number;
+    category_id: number;
+    supplier: {
+      id: number;
+      name: string;
+      logo: string;
+    };
   }[];
 }
 
 export interface BudgetFormProps {
   mode: 'edit' | 'create';
   defaultValues?: {
-    id?: number;
-    category_id: number;
+    id?: string;
+    category_id: string;
     category_name: string;
-    currency_id: number;
+    currency_id: string;
     budget_amount: number;
     period_type: 'monthly' | 'yearly' | 'custom';
     start_date: Date | string;
     end_date: Date | string;
   };
   categories: {
-    id: number;
+    id: string;
     name: string;
     icon: string;
     color: string;
+  };
+  currencies: {
+    id: string;
+    name: string;
+    code: string;
+    symbol: string;
   };
   budgetPeriod: {
     value: string;
     label: string;
   };
 }
-
-export type BudgetChartData = {
-  id: number;
-  name: string;
-  color: string;
-  budget_amount: number;
-  spent_amount: number;
-};
 
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;

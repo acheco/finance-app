@@ -18,7 +18,7 @@ return new class extends Migration {
       $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
       $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete();
       $table->foreignIdFor(Currency::class)->constrained()->nullOnDelete();
-      $table->string('name', 100);
+      $table->string('name', 100)->nullable();
       $table->decimal('budget_amount', 15, 2)->default(0);
       $table->decimal('spent_amount', 15, 2)->default(0);
       $table->enum('period_type', ['monthly', 'yearly', 'custom'])->default('monthly');
