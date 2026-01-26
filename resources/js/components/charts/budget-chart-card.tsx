@@ -32,7 +32,9 @@ export default function BudgetChartCard({ budgets }: BudgetChartCardProps) {
     return budgets.reduce((acc, curr) => acc + Number(curr.spent_amount), 0);
   }, [budgets]);
 
-  const formattedBudgetAmount = currencyFormat(totalBudgetAmount);
+  const currency = budgets[0].currency.code;
+
+  const formattedBudgetAmount = currencyFormat(totalBudgetAmount, currency);
 
   const chartData = React.useMemo(() => {
     return budgets

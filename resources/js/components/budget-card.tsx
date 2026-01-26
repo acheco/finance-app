@@ -49,12 +49,8 @@ export default function BudgetCard({
   currencies,
   categories,
 }: BudgetCardProps) {
-  const budgetAmount = Math.ceil(budget.budget_amount);
-  const spentAmount = Math.ceil(budget.spent_amount);
-  const formattedSpentAmount = currencyFormat(budget.spent_amount);
-  const remainingAmount = budget.budget_amount - budget.spent_amount;
-  const formattedRemainingAmount = currencyFormat(remainingAmount);
   const color = budget.category.color;
+
   return (
     <Card className="gap-3">
       <CardHeader>
@@ -93,12 +89,12 @@ export default function BudgetCard({
       <CardContent>
         <div>
           <p className="pb-4 text-sm text-grey-500">
-            Maximum of ${budget.budget_amount}
+            Maximum of ${budget.formatedBudgetAmount}
           </p>
           <div className="flex h-[32px] items-center rounded-sm bg-beige-100 px-1">
             <Progress
-              value={spentAmount}
-              max={budgetAmount}
+              value={budget.spent_amount}
+              max={budget.budget_amount}
               progressColor={color}
               className={cn(
                 `h-[24px] w-full rounded-sm bg-beige-100 [&>div]:rounded-sm`,
@@ -114,7 +110,7 @@ export default function BudgetCard({
             />
             <div className="space-y-1">
               <p className="text-xs">Spent</p>
-              <p className="font-bold text-black">{formattedSpentAmount}</p>
+              <p className="font-bold text-black">{budget.spent_amount}</p>
             </div>
           </div>
           <div className={'flex items-center gap-4'}>
@@ -122,7 +118,7 @@ export default function BudgetCard({
             <div className="space-y-1">
               <p className="text-xs">Remaining</p>
               <p className="text-sm font-bold text-black">
-                {formattedRemainingAmount}
+                {budget.remaining_amount}
               </p>
             </div>
           </div>
@@ -167,7 +163,7 @@ export default function BudgetCard({
                       </TableCell>
                       <TableCell className="text-right">
                         <p className="pb-1 text-xs font-bold">
-                          -${transaction.amount}
+                          -{currencyFormat(transaction.amount)}
                         </p>
                         <p className="text-xs text-grey-500">
                           {transaction.transaction_date.split('T')[0]}

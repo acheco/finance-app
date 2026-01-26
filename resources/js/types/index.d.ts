@@ -226,6 +226,8 @@ export interface Budget {
   category_id: number;
   currency_id: string;
   budget_amount: number;
+  formatedBudgetAmount: number;
+  remaining_amount: number;
   spent_amount: number;
   period_type: 'monthly' | 'yearly' | 'custom';
   start_date: Date | string;
