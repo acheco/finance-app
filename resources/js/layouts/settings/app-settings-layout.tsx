@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
 import { Separator } from '@/components/ui/separator';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
@@ -14,12 +14,7 @@ import { index as currencies } from '@/routes/currencies';
 import { index as suppliers } from '@/routes/suppliers';
 import { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import {
-  BankIcon,
-  CurrencyDollarIcon,
-  StorefrontIcon,
-  TagIcon,
-} from '@phosphor-icons/react';
+import { BankIcon, CurrencyDollarIcon, StorefrontIcon, TagIcon } from '@phosphor-icons/react';
 import React from 'react';
 
 const sidebarNavItems: NavItem[] = [
@@ -101,7 +96,9 @@ export default function AppSettingsLayout({
         </NavigationMenuList>
       </NavigationMenu>
 
-      <section className="space-y-8 xl:max-w-6xl">{children}</section>
+      <section className="space-y-8 rounded-md bg-white p-8 shadow-sm xl:max-w-6xl">
+        {children}
+      </section>
     </div>
   );
 }

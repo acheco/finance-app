@@ -229,6 +229,7 @@ export interface Budget {
   formatedBudgetAmount: number;
   remaining_amount: number;
   spent_amount: number;
+  formatedSpentAmount: number;
   period_type: 'monthly' | 'yearly' | 'custom';
   start_date: Date | string;
   end_date: Date | string;

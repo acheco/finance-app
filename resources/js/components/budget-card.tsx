@@ -110,7 +110,9 @@ export default function BudgetCard({
             />
             <div className="space-y-1">
               <p className="text-xs">Spent</p>
-              <p className="font-bold text-black">{budget.spent_amount}</p>
+              <p className="font-bold text-black">
+                {budget.formatedSpentAmount}
+              </p>
             </div>
           </div>
           <div className={'flex items-center gap-4'}>
