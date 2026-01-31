@@ -4,6 +4,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from '@/components/ui/input-group';
+import { cn } from '@/lib/utils';
 import { router } from '@inertiajs/react';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
@@ -51,7 +52,7 @@ export default function SearchFilter({
   }, [debouncedSearchTerm, initialValue, url, onlyProps]);
 
   return (
-    <Field className={className}>
+    <Field className={cn('max-w-lg', className)}>
       <FieldLabel htmlFor="search" className={showLabel ? '' : 'sr-only'}>
         {label}
       </FieldLabel>

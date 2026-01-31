@@ -8,6 +8,7 @@ interface AppLayoutProps {
   title: string;
   withReturnButton?: boolean;
   backUrl?: string;
+  headerChildren?: ReactNode;
 }
 
 export default ({
@@ -15,12 +16,14 @@ export default ({
   title,
   withReturnButton,
   backUrl,
+  headerChildren,
   ...props
 }: AppLayoutProps) => (
   <AppLayoutTemplate
     title={title}
     withReturnButton={withReturnButton}
     backUrl={backUrl}
+    headerChildren={headerChildren}
     {...props}
   >
     {children}

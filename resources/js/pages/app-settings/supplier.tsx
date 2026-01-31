@@ -62,81 +62,77 @@ export default function Supplier({
             <SupplierForm mode="create" categories={categories} />
           </div>
 
-          <div className="rounded-md bg-white p-8 shadow-sm">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead className="hidden md:table-cell">Email</TableHead>
-                  <TableHead className="hidden md:table-cell">Phone</TableHead>
-                  <TableHead className="hidden xl:table-cell">
-                    Address
-                  </TableHead>
-                  <TableHead></TableHead>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead className="hidden md:table-cell">Email</TableHead>
+                <TableHead className="hidden md:table-cell">Phone</TableHead>
+                <TableHead className="hidden xl:table-cell">Address</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {suppliers.data.map((supplier) => (
+                <TableRow key={supplier.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={supplier.logo}
+                        alt={supplier.name}
+                        width="20"
+                        height="20"
+                        className="hidden sm:block"
+                      />
+                      <p>{supplier.name}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>{supplier.category}</TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {supplier.email}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {supplier.phone || '-'}
+                  </TableCell>
+                  <TableCell className="hidden xl:table-cell">
+                    {supplier.address || '-'}
+                  </TableCell>
+                  <TableCell className="flex items-center gap-2">
+                    {supplier.can.update || supplier.can.delete ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <DotsThreeIcon weight="regular" size={18} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {supplier.can.delete && (
+                            <DropdownMenuItem asChild>
+                              <DeleteSupplier supplier={supplier} />
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuSeparator />
+                          {supplier.can.update && (
+                            <DropdownMenuItem asChild>
+                              <SupplierForm
+                                mode="edit"
+                                defaultValue={supplier}
+                                categories={categories}
+                              />
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : (
+                      <LockedField />
+                    )}
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {suppliers.data.map((supplier) => (
-                  <TableRow key={supplier.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={supplier.logo}
-                          alt={supplier.name}
-                          width="20"
-                          height="20"
-                          className="hidden sm:block"
-                        />
-                        <p>{supplier.name}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell>{supplier.category}</TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {supplier.email}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {supplier.phone || '-'}
-                    </TableCell>
-                    <TableCell className="hidden xl:table-cell">
-                      {supplier.address || '-'}
-                    </TableCell>
-                    <TableCell className="flex items-center gap-2">
-                      {supplier.can.update || supplier.can.delete ? (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <DotsThreeIcon weight="regular" size={18} />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            {supplier.can.delete && (
-                              <DropdownMenuItem asChild>
-                                <DeleteSupplier supplier={supplier} />
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuSeparator />
-                            {supplier.can.update && (
-                              <DropdownMenuItem asChild>
-                                <SupplierForm
-                                  mode="edit"
-                                  defaultValue={supplier}
-                                  categories={categories}
-                                />
-                              </DropdownMenuItem>
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      ) : (
-                        <LockedField />
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <TablePagination links={suppliers.links} className={'mt-6'} />
-          </div>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination links={suppliers.links} className={'mt-6'} />
         </div>
       </AppSettingsLayout>
     </AppLayout>

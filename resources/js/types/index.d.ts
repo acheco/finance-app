@@ -220,6 +220,66 @@ export interface Transaction {
   };
 }
 
+export interface Budget {
+  id: number;
+  user_id: number;
+  category_id: number;
+  currency_id: string;
+  budget_amount: number;
+  formatedBudgetAmount: number;
+  remaining_amount: number;
+  spent_amount: number;
+  formatedSpentAmount: number;
+  period_type: 'monthly' | 'yearly' | 'custom';
+  start_date: Date | string;
+  end_date: Date | string;
+  currency: {
+    id: string;
+    name: string;
+    code: string;
+    symbol: string;
+  };
+  category: {
+    id: string;
+    name: string;
+    icon: string;
+    color: string;
+  };
+  recent_transactions: {
+    id: number;
+    amount: number;
+    transaction_date: string;
+    supplier_id: number;
+    category_id: number;
+    supplier: {
+      id: number;
+      name: string;
+      logo: string;
+    };
+  }[];
+}
+
+export interface BudgetFormProps {
+  mode: 'edit' | 'create';
+  defaultValues: Budget;
+  categories: {
+    id: string;
+    name: string;
+    icon: string;
+    color: string;
+  };
+  currencies: {
+    id: string;
+    name: string;
+    code: string;
+    symbol: string;
+  };
+  budgetPeriod: {
+    value: string;
+    label: string;
+  };
+}
+
 export type PaginatedCurrencies = PaginatedData<Currency>;
 export type PaginatedCategories = PaginatedData<Category>;
 export type PaginatedSuppliers = PaginatedData<Supplier>;

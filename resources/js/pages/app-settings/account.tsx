@@ -80,7 +80,7 @@ export default function Account({
               />
             </div>
           )}
-          <div className="rounded-md bg-white p-8 shadow-sm">
+          <div className="">
             {accounts.data.length === 0 ? (
               <Empty className="border border-dashed">
                 <EmptyHeader>

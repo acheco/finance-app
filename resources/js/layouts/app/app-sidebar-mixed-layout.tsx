@@ -4,16 +4,10 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { MobileNav } from '@/components/mobile-nav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { dashboard } from '@/routes';
+import { index as budgets } from '@/routes/budgets';
 import { index as transactions } from '@/routes/transactions';
 import { NavItem } from '@/types';
-import {
-  ArrowsDownUpIcon,
-  ChartDonutIcon,
-  GearIcon,
-  HouseIcon,
-  ReceiptIcon,
-  TipJarIcon,
-} from '@phosphor-icons/react';
+import { ArrowsDownUpIcon, ChartDonutIcon, GearIcon, HouseIcon, ReceiptIcon, TipJarIcon } from '@phosphor-icons/react';
 import React from 'react';
 
 const NavItems: NavItem[] = [
@@ -28,8 +22,8 @@ const NavItems: NavItem[] = [
     icon: ArrowsDownUpIcon,
   },
   {
-    title: 'Budgets',
-    href: '#',
+    title: 'budgets',
+    href: budgets(),
     icon: ChartDonutIcon,
   },
   {
@@ -54,6 +48,7 @@ interface AppSidebarProps {
   children: React.ReactNode;
   withReturnButton?: boolean;
   backUrl?: string;
+  headerChildren?: React.ReactNode;
 }
 
 export default function AppSidebarLayout({
@@ -61,6 +56,7 @@ export default function AppSidebarLayout({
   title,
   withReturnButton,
   backUrl,
+  headerChildren,
 }: AppSidebarProps) {
   const isMobile = useIsMobile();
 
@@ -72,6 +68,7 @@ export default function AppSidebarLayout({
             title={title}
             withReturnButton={withReturnButton}
             backUrl={backUrl}
+            headerChildren={headerChildren}
           />
           {children}
           <MobileNav NavItems={NavItems} />
@@ -82,11 +79,12 @@ export default function AppSidebarLayout({
             NavItems={NavItems}
             className="row-span-full overflow-y-hidden"
           />
-          <main className="max-w-7xl overflow-y-auto">
+          <main className="overflow-y-auto">
             <AppHeader
               title={title}
               withReturnButton={withReturnButton}
               backUrl={backUrl}
+              headerChildren={headerChildren}
             />
             {children}
           </main>

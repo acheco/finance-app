@@ -47,53 +47,51 @@ export default function Currency({ currencies, filters }: CurrencyPageProps) {
 
             <CurrencyForm mode="create" />
           </div>
-          <div className="rounded-md bg-white p-8 shadow-sm">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead className="hidden md:table-cell">Code</TableHead>
-                  <TableHead className="hidden md:table-cell">Symbol</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currencies.data.map((currency) => (
-                  <TableRow key={currency.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-custom md:hidden">
-                          <span className="text-xs text-white">
-                            {currency.symbol}
-                          </span>
-                        </div>
-                        {currency.name}
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead className="hidden md:table-cell">Code</TableHead>
+                <TableHead className="hidden md:table-cell">Symbol</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {currencies.data.map((currency) => (
+                <TableRow key={currency.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-custom md:hidden">
+                        <span className="text-xs text-white">
+                          {currency.symbol}
+                        </span>
                       </div>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {currency.code}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {currency.symbol}
-                    </TableCell>
-                    <TableCell className="flex items-center gap-2">
-                      {currency.can.delete && (
-                        <DeleteCurrency currency={currency} />
-                      )}
-                      {currency.can.update && (
-                        <CurrencyForm mode="edit" defaultValue={currency} />
-                      )}
-                      {!currency.can.update && !currency.can.delete && (
-                        <LockedField />
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                      {currency.name}
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {currency.code}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {currency.symbol}
+                  </TableCell>
+                  <TableCell className="flex items-center gap-2">
+                    {currency.can.delete && (
+                      <DeleteCurrency currency={currency} />
+                    )}
+                    {currency.can.update && (
+                      <CurrencyForm mode="edit" defaultValue={currency} />
+                    )}
+                    {!currency.can.update && !currency.can.delete && (
+                      <LockedField />
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
-            <TablePagination links={currencies.links} className={'mt-6'} />
-          </div>
+          <TablePagination links={currencies.links} className={'mt-6'} />
         </div>
       </AppSettingsLayout>
     </AppLayout>

@@ -70,7 +70,7 @@ class TransactionController extends Controller
         'description' => $transaction->description,
         'icon' => $transaction->category?->icon,
         'color' => $transaction->category?->color,
-        'transaction_date' => $transaction->transaction_date,
+        'transaction_date' => $transaction->transaction_date->format('d-m-Y'),
         'created_at' => $transaction->created_at->format('d-m-Y'),
         'can' => [
           'delete' => request()->user()->can('delete', $transaction),

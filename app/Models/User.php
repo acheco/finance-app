@@ -38,21 +38,6 @@ class User extends Authenticatable
   ];
 
   /**
-   * Get the attributes that should be cast.
-   *
-   * @return array<string, string>
-   */
-  protected function casts(): array
-  {
-    return [
-      'email_verified_at' => 'datetime',
-      'password' => 'hashed',
-      'two_factor_confirmed_at' => 'datetime',
-    ];
-  }
-
-
-  /**
    * Relationships
    **/
 
@@ -80,5 +65,24 @@ class User extends Authenticatable
   {
     return $this->hasMany(Transaction::class);
   }
-  
+
+  public function budgets(): hasMany
+  {
+    return $this->hasMany(Budget::class);
+  }
+
+  /**
+   * Get the attributes that should be cast.
+   *
+   * @return array<string, string>
+   */
+  protected function casts(): array
+  {
+    return [
+      'email_verified_at' => 'datetime',
+      'password' => 'hashed',
+      'two_factor_confirmed_at' => 'datetime',
+    ];
+  }
+
 }

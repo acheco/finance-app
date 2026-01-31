@@ -5,7 +5,7 @@ export default function Dashboard() {
   return (
     <AppLayout title="Overview">
       <Head title="Dashboard" />
-      <div className="overflow-auto">
+      <div className="max-w-7xl overflow-auto">
         <div className="aspect-video bg-blue-100">Content</div>
         <div className="aspect-video bg-green-100">Content</div>
         <div className="aspect-video bg-yellow-100">Content</div>
